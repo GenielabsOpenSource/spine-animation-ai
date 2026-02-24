@@ -10,12 +10,14 @@
 ---
 
 <p align="center">
-  <img src="demo/preview.gif" alt="Sombrero character idle animation" width="300"/>
-  &nbsp;&nbsp;&nbsp;
-  <img src="demo/editor-screenshot.png" alt="Part editor UI" width="480"/>
+  <img src="demo/sombrero_demo.gif" alt="Sombrero character idle animation loop" width="280"/>
 </p>
 
-> **Live Demo →** [Open the interactive editor](https://GenielabsOpenSource.github.io/spine-animation-ai/demo/sombrero_editor.html)
+<p align="center">
+  <a href="https://GenielabsOpenSource.github.io/spine-animation-ai/demo/sombrero_idle.html"><strong>▶ Live Animation Preview</strong></a>
+  &nbsp;·&nbsp;
+  <a href="https://GenielabsOpenSource.github.io/spine-animation-ai/demo/sombrero_editor.html"><strong>🎛 Interactive Part Editor</strong></a>
+</p>
 
 ---
 
