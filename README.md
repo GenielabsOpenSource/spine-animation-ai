@@ -28,14 +28,23 @@
 
 ---
 
-## 🔬 Backed by Genielabs Research
+<div align="center">
 
-**[Genielabs](https://genielabs.tech)** is actively researching AI-driven animation pipelines — using machine learning to automate character rigging, motion generation, and asset positioning for 2D game production.
+# 🔬 Genielabs — Pioneering AI Animation Research
 
-This repository is a product of that research: an open-source skill that brings those capabilities directly into Claude.
+## We are actively researching AI-driven animation pipelines.
 
-> Interested in collaborating, licensing, or learning more about our work?
-> **Reach us at [genielabs.tech](https://genielabs.tech)**
+**[Genielabs](https://genielabs.tech)** is at the forefront of AI-powered 2D animation — using machine learning to automate character rigging, motion generation, and asset positioning for game production.
+
+This repository is a direct product of that research: an open-source skill that brings industrial-grade animation automation into Claude.
+
+### 📬 Want to collaborate, license, or learn more?
+
+## 👉 [**genielabs.tech**](https://genielabs.tech) 👈
+
+*Reach out — we'd love to hear from you.*
+
+</div>
 
 ---
 

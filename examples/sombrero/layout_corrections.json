@@ -2,12 +2,12 @@
   "adjustments": {
     "right-arm": {
       "original_offset": {
-        "x": -1.5,
-        "y": 0
+        "x": -31,
+        "y": -78
       },
       "user_offset": {
-        "dx": -29.5,
-        "dy": -78,
+        "dx": 0,
+        "dy": 0,
         "drot": 0
       },
       "final_offset": {
@@ -15,29 +15,14 @@
         "y": -78
       }
     },
-    "left-leg": {
-      "original_offset": {
-        "x": -9.5,
-        "y": -106.5
-      },
-      "user_offset": {
-        "dx": -43.9,
-        "dy": -51.2,
-        "drot": 0
-      },
-      "final_offset": {
-        "x": -53.4,
-        "y": -157.7
-      }
-    },
     "right-thigh": {
       "original_offset": {
-        "x": 11.5,
-        "y": -81.5
+        "x": -78.7,
+        "y": -146.1
       },
       "user_offset": {
-        "dx": -90.2,
-        "dy": -64.6,
+        "dx": 0,
+        "dy": 0,
         "drot": 0
       },
       "final_offset": {
@@ -47,12 +32,12 @@
     },
     "right-leg": {
       "original_offset": {
-        "x": 7.5,
-        "y": -126.5
+        "x": 63.6,
+        "y": -146
       },
       "user_offset": {
-        "dx": 56.1,
-        "dy": -19.5,
+        "dx": 0,
+        "dy": 0,
         "drot": 0
       },
       "final_offset": {
@@ -62,27 +47,42 @@
     },
     "left-thigh": {
       "original_offset": {
-        "x": 10,
-        "y": -76
+        "x": 103.9,
+        "y": -163.8
       },
       "user_offset": {
-        "dx": 93.9,
-        "dy": -87.8,
+        "dx": 1.2,
+        "dy": 0,
         "drot": 0
       },
       "final_offset": {
-        "x": 103.9,
+        "x": 105.1,
         "y": -163.8
+      }
+    },
+    "left-leg": {
+      "original_offset": {
+        "x": -53.4,
+        "y": -157.7
+      },
+      "user_offset": {
+        "dx": 0,
+        "dy": 0,
+        "drot": 0
+      },
+      "final_offset": {
+        "x": -53.4,
+        "y": -157.7
       }
     },
     "waist": {
       "original_offset": {
-        "x": -8.5,
-        "y": -39.5
+        "x": 19.5,
+        "y": -81
       },
       "user_offset": {
-        "dx": 28,
-        "dy": -41.5,
+        "dx": 0,
+        "dy": 0,
         "drot": 0
       },
       "final_offset": {
@@ -92,12 +92,12 @@
     },
     "left-hand": {
       "original_offset": {
-        "x": 0.5,
-        "y": 2
+        "x": 44.4,
+        "y": 6.8
       },
       "user_offset": {
-        "dx": 43.9,
-        "dy": 4.8,
+        "dx": 0,
+        "dy": 0,
         "drot": 0
       },
       "final_offset": {
@@ -122,12 +122,12 @@
     },
     "hat": {
       "original_offset": {
-        "x": 1.5,
-        "y": -1
+        "x": -2.9,
+        "y": 5.2
       },
       "user_offset": {
-        "dx": -4.4,
-        "dy": 6.2,
+        "dx": 0,
+        "dy": 0,
         "drot": 0
       },
       "final_offset": {
@@ -137,12 +137,12 @@
     },
     "head": {
       "original_offset": {
-        "x": 3,
-        "y": 20.5
+        "x": -15.3,
+        "y": 21.7
       },
       "user_offset": {
-        "dx": -18.3,
-        "dy": 1.2,
+        "dx": 0,
+        "dy": 0,
         "drot": 0
       },
       "final_offset": {
@@ -153,10 +153,10 @@
   },
   "draw_order": [
     "right-arm",
-    "left-leg",
     "right-thigh",
     "right-leg",
     "left-thigh",
+    "left-leg",
     "waist",
     "left-hand",
     "torso",
