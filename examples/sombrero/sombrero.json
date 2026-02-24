@@ -153,24 +153,24 @@
       "attachment": "waist"
     },
     {
-      "name": "torso",
-      "bone": "torso",
-      "attachment": "torso"
-    },
-    {
       "name": "left-hand",
       "bone": "left-hand-bone",
       "attachment": "left-hand"
     },
     {
-      "name": "head",
-      "bone": "head",
-      "attachment": "head"
+      "name": "torso",
+      "bone": "torso",
+      "attachment": "torso"
     },
     {
       "name": "hat",
       "bone": "hat",
       "attachment": "hat"
+    },
+    {
+      "name": "head",
+      "bone": "head",
+      "attachment": "head"
     }
   ],
   "skins": [
