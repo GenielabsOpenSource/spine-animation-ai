@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Spine Animation Preview</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: #1a1a2e;
+    color: #e0e0e0;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+  }
+  h1 {
+    font-size: 1.4em;
+    margin-bottom: 15px;
+    color: #a8b2d1;
+    letter-spacing: 0.05em;
+  }
+  .canvas-container {
+    position: relative;
+    background: #16213e;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+    margin-bottom: 20px;
+  }
+  canvas {
+    display: block;
+  }
+  .controls {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-bottom: 15px;
+  }
+  button, select {
+    background: #0f3460;
+    color: #e0e0e0;
+    border: 1px solid #1a4a8a;
+    padding: 8px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background 0.2s;
+  }
+  button:hover, select:hover { background: #1a4a8a; }
+  button.active { background: #e94560; border-color: #e94560; }
+  label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 14px;
+    cursor: pointer;
+  }
+  input[type="range"] {
+    width: 100px;
+    accent-color: #e94560;
+  }
+  input[type="checkbox"] { accent-color: #e94560; }
+  .info {
+    font-size: 12px;
+    color: #6b7da0;
+    text-align: center;
+  }
+</style>
+</head>
+<body>
+<h1>Spine Animation Preview</h1>
+
+<div class="canvas-container">
+  <canvas id="canvas" width="600" height="700"></canvas>
+</div>
+
+<div class="controls">
+  <button id="playPauseBtn" class="active">⏸ Pause</button>
+  <select id="animSelect"></select>
+  <label>
+    Speed:
+    <input type="range" id="speedSlider" min="0.1" max="3" step="0.1" value="1">
+    <span id="speedLabel">1.0x</span>
+  </label>
+  <label>
+    <input type="checkbox" id="showBones"> Show Bones
+  </label>
+  <label>
+    <input type="checkbox" id="showOrigin"> Show Origin
+  </label>
+</div>
+
+<div class="info">
+  <span id="fpsDisplay">FPS: --</span> |
+  <span id="timeDisplay">Time: 0.00s</span>
+</div>
+
+<script>
+// ─── DATA ──────────────────────────────────────────────────────────
+const SKELETON = {"skeleton": {"hash": "24a4aa90ec3aa917d784", "spine": "4.1.0", "x": -150, "y": 0, "width": 300, "height": 500, "images": "./images/"}, "bones": [{"name": "root"}, {"name": "hip", "parent": "root", "x": 0, "y": 200, "length": 30}, {"name": "torso", "parent": "hip", "length": 120}, {"name": "neck", "parent": "torso", "y": 120, "length": 20}, {"name": "head", "parent": "neck", "y": 20, "length": 40}, {"name": "left-upper-arm", "parent": "torso", "x": -50, "y": 110, "rotation": -10, "length": 60}, {"name": "left-lower-arm", "parent": "left-upper-arm", "y": 60, "length": 55}, {"name": "right-upper-arm", "parent": "torso", "x": 50, "y": 110, "rotation": 10, "length": 60}, {"name": "right-lower-arm", "parent": "right-upper-arm", "y": 60, "length": 55}, {"name": "left-upper-leg", "parent": "hip", "x": -18, "rotation": 180, "length": 100}, {"name": "left-lower-leg", "parent": "left-upper-leg", "y": 100, "length": 80}, {"name": "left-foot", "parent": "left-lower-leg", "y": 80, "rotation": -90, "length": 40}, {"name": "right-upper-leg", "parent": "hip", "x": 18, "rotation": 180, "length": 100}, {"name": "right-lower-leg", "parent": "right-upper-leg", "y": 100, "length": 80}, {"name": "right-foot", "parent": "right-lower-leg", "y": 80, "rotation": -90, "length": 40}], "slots": [{"name": "left-upper-leg", "bone": "left-upper-leg", "attachment": "left-upper-leg"}, {"name": "left-lower-leg", "bone": "left-lower-leg", "attachment": "left-lower-leg"}, {"name": "left-foot", "bone": "left-foot", "attachment": "left-foot"}, {"name": "right-upper-leg", "bone": "right-upper-leg", "attachment": "right-upper-leg"}, {"name": "right-lower-leg", "bone": "right-lower-leg", "attachment": "right-lower-leg"}, {"name": "right-foot", "bone": "right-foot", "attachment": "right-foot"}, {"name": "torso", "bone": "torso", "attachment": "torso"}, {"name": "left-upper-arm", "bone": "left-upper-arm", "attachment": "left-upper-arm"}, {"name": "left-lower-arm", "bone": "left-lower-arm", "attachment": "left-lower-arm"}, {"name": "right-upper-arm", "bone": "right-upper-arm", "attachment": "right-upper-arm"}, {"name": "right-lower-arm", "bone": "right-lower-arm", "attachment": "right-lower-arm"}, {"name": "head", "bone": "head", "attachment": "head"}], "skins": [{"name": "default", "attachments": {"left-upper-leg": {"left-upper-leg": {"width": 33, "height": 120, "x": 0, "y": 50}}, "left-lower-leg": {"left-lower-leg": {"width": 38, "height": 70, "x": 0, "y": 30}}, "left-foot": {"left-foot": {"width": 50, "height": 30, "x": 15, "y": 0}}, "right-upper-leg": {"right-upper-leg": {"width": 33, "height": 120, "x": 0, "y": 50}}, "right-lower-leg": {"right-lower-leg": {"width": 38, "height": 70, "x": 0, "y": 30}}, "right-foot": {"right-foot": {"width": 50, "height": 30, "x": 15, "y": 0}}, "torso": {"torso": {"width": 80, "height": 150, "x": 0, "y": 60}}, "left-upper-arm": {"left-upper-arm": {"width": 40, "height": 70, "x": 0, "y": 30}}, "left-lower-arm": {"left-lower-arm": {"width": 40, "height": 70, "x": 0, "y": 30}}, "right-upper-arm": {"right-upper-arm": {"width": 40, "height": 70, "x": 0, "y": 30}}, "right-lower-arm": {"right-lower-arm": {"width": 40, "height": 70, "x": 0, "y": 30}}, "head": {"head": {"width": 80, "height": 80, "x": 0, "y": 20}}}}], "animations": {"idle": {"bones": {"torso": {"rotate": [{"time": 0, "angle": 0}, {"time": 0.8, "angle": 1.5, "curve": [0.25, 0, 0.75, 1]}, {"time": 1.6, "angle": 0, "curve": [0.25, 0, 0.75, 1]}], "translate": [{"time": 0, "x": 0, "y": 0}, {"time": 0.8, "x": 0, "y": 1.5, "curve": [0.25, 0, 0.75, 1]}, {"time": 1.6, "x": 0, "y": 0, "curve": [0.25, 0, 0.75, 1]}]}, "head": {"rotate": [{"time": 0, "angle": 0}, {"time": 0.96, "angle": -2, "curve": [0.25, 0, 0.75, 1]}, {"time": 1.6, "angle": 0, "curve": [0.25, 0, 0.75, 1]}]}, "neck": {"rotate": [{"time": 0, "angle": 0}, {"time": 0.8800000000000001, "angle": 1, "curve": [0.25, 0, 0.75, 1]}, {"time": 1.6, "angle": 0, "curve": [0.25, 0, 0.75, 1]}]}, "left-upper-arm": {"rotate": [{"time": 0, "angle": 0}, {"time": 0.8, "angle": 1.5, "curve": [0.25, 0, 0.75, 1]}, {"time": 1.6, "angle": 0, "curve": [0.25, 0, 0.75, 1]}]}, "left-lower-arm": {"rotate": [{"time": 0, "angle": 0}, {"time": 0.8800000000000001, "angle": 1, "curve": [0.25, 0, 0.75, 1]}, {"time": 1.6, "angle": 0, "curve": [0.25, 0, 0.75, 1]}]}, "right-upper-arm": {"rotate": [{"time": 0, "angle": 0}, {"time": 0.8, "angle": -1.5, "curve": [0.25, 0, 0.75, 1]}, {"time": 1.6, "angle": 0, "curve": [0.25, 0, 0.75, 1]}]}, "right-lower-arm": {"rotate": [{"time": 0, "angle": 0}, {"time": 0.8800000000000001, "angle": -1, "curve": [0.25, 0, 0.75, 1]}, {"time": 1.6, "angle": 0, "curve": [0.25, 0, 0.75, 1]}]}}}, "walk": {"bones": {"hip": {"translate": [{"time": 0, "x": 0, "y": 0}, {"time": 0.2, "x": 0, "y": 3, "curve": [0.25, 0, 0.75, 1]}, {"time": 0.4, "x": 0, "y": 0, "curve": [0.25, 0, 0.75, 1]}, {"time": 0.6000000000000001, "x": 0, "y": 3, "curve": [0.25, 0, 0.75, 1]}, {"time": 0.8, "x": 0, "y": 0, "curve": [0.25, 0, 0.75, 1]}], "rotate": [{"time": 0, "angle": 0}, {"time": 0.2, "angle": -2, "curve": [0.25, 0, 0.75, 1]}, {"time": 0.4, "angle": 0, "curve": [0.25, 0, 0.75, 1]}, {"time": 0.6000000000000001, "angle": 2, "curve": [0.25, 0, 0.75, 1]}, {"time": 0.8, "angle": 0, "curve": [0.25, 0, 0.75, 1]}]}, "torso": {"rotate": [{"time": 0, "angle": 0}, {"time": 0.2, "angle": 2, "curve": [0.25, 0, 0.75, 1]}, {"time": 0.4, "angle": 0, "curve": [0.25, 0, 0.75, 1]}, {"time": 0.6000000000000001, "angle": -2, "curve": [0.25, 0, 0.75, 1]}, {"time": 0.8, "angle": 0, "curve": [0.25, 0, 0.75, 1]}]}, "head": {"rotate": [{"time": 0, "angle": 0}, {"time": 0.2, "angle": -1.5, "curve": [0.25, 0, 0.75, 1]}, {"time": 0.4, "angle": 0, "curve": [0.25, 0, 0.75, 1]}, {"time": 0.6000000000000001, "angle": 1.5, "curve": [0.25, 0, 0.75, 1]}, {"time": 0.8, "angle": 0, "curve": [0.25, 0, 0.75, 1]}]}, "left-upper-leg": {"rotate": [{"time": 0, "angle": -20}, {"time": 0.2, "angle": 0, "curve": [0.25, 0, 0.75, 1]}, {"time": 0.4, "angle": 20, "curve": [0.25, 0, 0.75, 1]}, {"time": 0.6000000000000001, "angle": 0, "curve": [0.25, 0, 0.75, 1]}, {"time": 0.8, "angle": -20, "curve": [0.25, 0, 0.75, 1]}]}, "left-lower-leg": {"rotate": [{"time": 0, "angle": 10}, {"time": 0.2, "angle": 30, "curve": [0.25, 0, 0.75, 1]}, {"time": 0.4, "angle": 30, "curve": [0.25, 0, 0.75, 1]}, {"time": 0.6000000000000001, "angle": 10, "curve": [0.25, 0, 0.75, 1]}, {"time": 0.8, "angle": 10, "curve": [0.25, 0, 0.75, 1]}]}, "right-upper-leg": {"rotate": [{"time": 0, "angle": 20}, {"time": 0.2, "angle": 0, "curve": [0.25, 0, 0.75, 1]}, {"time": 0.4, "angle": -20, "curve": [0.25, 0, 0.75, 1]}, {"time": 0.6000000000000001, "angle": 0, "curve": [0.25, 0, 0.75, 1]}, {"time": 0.8, "angle": 20, "curve": [0.25, 0, 0.75, 1]}]}, "right-lower-leg": {"rotate": [{"time": 0, "angle": 30}, {"time": 0.2, "angle": 30, "curve": [0.25, 0, 0.75, 1]}, {"time": 0.4, "angle": 10, "curve": [0.25, 0, 0.75, 1]}, {"time": 0.6000000000000001, "angle": 10, "curve": [0.25, 0, 0.75, 1]}, {"time": 0.8, "angle": 30, "curve": [0.25, 0, 0.75, 1]}]}, "left-upper-arm": {"rotate": [{"time": 0, "angle": 15}, {"time": 0.2, "angle": 0, "curve": [0.25, 0, 0.75, 1]}, {"time": 0.4, "angle": -15, "curve": [0.25, 0, 0.75, 1]}, {"time": 0.6000000000000001, "angle": 0, "curve": [0.25, 0, 0.75, 1]}, {"time": 0.8, "angle": 15, "curve": [0.25, 0, 0.75, 1]}]}, "left-lower-arm": {"rotate": [{"time": 0, "angle": -25}, {"time": 0.2, "angle": -15, "curve": [0.25, 0, 0.75, 1]}, {"time": 0.4, "angle": -10, "curve": [0.25, 0, 0.75, 1]}, {"time": 0.6000000000000001, "angle": -15, "curve": [0.25, 0, 0.75, 1]}, {"time": 0.8, "angle": -25, "curve": [0.25, 0, 0.75, 1]}]}, "right-upper-arm": {"rotate": [{"time": 0, "angle": -15}, {"time": 0.2, "angle": 0, "curve": [0.25, 0, 0.75, 1]}, {"time": 0.4, "angle": 15, "curve": [0.25, 0, 0.75, 1]}, {"time": 0.6000000000000001, "angle": 0, "curve": [0.25, 0, 0.75, 1]}, {"time": 0.8, "angle": -15, "curve": [0.25, 0, 0.75, 1]}]}, "right-lower-arm": {"rotate": [{"time": 0, "angle": -10}, {"time": 0.2, "angle": -15, "curve": [0.25, 0, 0.75, 1]}, {"time": 0.4, "angle": -25, "curve": [0.25, 0, 0.75, 1]}, {"time": 0.6000000000000001, "angle": -15, "curve": [0.25, 0, 0.75, 1]}, {"time": 0.8, "angle": -10, "curve": [0.25, 0, 0.75, 1]}]}}}, "wave": {"bones": {"right-upper-arm": {"rotate": [{"time": 0, "angle": 0}, {"time": 0.2, "angle": -120, "curve": [0, 0, 0.58, 1]}, {"time": 1.0, "angle": -120}, {"time": 1.2, "angle": 0, "curve": [0.42, 0, 1, 1]}]}, "right-lower-arm": {"rotate": [{"time": 0, "angle": 0}, {"time": 0.2, "angle": -30, "curve": [0, 0, 0.58, 1]}, {"time": 0.4, "angle": 15, "curve": [0.25, 0, 0.75, 1]}, {"time": 0.6, "angle": -15, "curve": [0.25, 0, 0.75, 1]}, {"time": 0.8, "angle": 15, "curve": [0.25, 0, 0.75, 1]}, {"time": 1.0, "angle": -15, "curve": [0.25, 0, 0.75, 1]}, {"time": 1.2, "angle": 0, "curve": [0.42, 0, 1, 1]}]}, "torso": {"rotate": [{"time": 0, "angle": 0}, {"time": 0.2, "angle": -3, "curve": [0.25, 0, 0.75, 1]}, {"time": 1.0, "angle": -3}, {"time": 1.2, "angle": 0, "curve": [0.25, 0, 0.75, 1]}]}, "head": {"rotate": [{"time": 0, "angle": 0}, {"time": 0.3, "angle": 5, "curve": [0.25, 0, 0.75, 1]}, {"time": 1.0, "angle": 5}, {"time": 1.2, "angle": 0, "curve": [0.25, 0, 0.75, 1]}]}}}, "jump": {"bones": {"hip": {"translate": [{"time": 0, "x": 0, "y": 0}, {"time": 0.15, "x": 0, "y": -15, "curve": [0.42, 0, 1, 1]}, {"time": 0.35, "x": 0, "y": 60, "curve": [0, 0, 0.58, 1]}, {"time": 0.55, "x": 0, "y": 60, "curve": [0.42, 0, 1, 1]}, {"time": 0.8, "x": 0, "y": -8, "curve": [0.42, 0, 1, 1]}, {"time": 1.0, "x": 0, "y": 0, "curve": [0, 0, 0.58, 1]}]}, "torso": {"rotate": [{"time": 0, "angle": 0}, {"time": 0.15, "angle": 5, "curve": [0.42, 0, 1, 1]}, {"time": 0.35, "angle": -5, "curve": [0, 0, 0.58, 1]}, {"time": 0.8, "angle": 3, "curve": [0.42, 0, 1, 1]}, {"time": 1.0, "angle": 0, "curve": [0, 0, 0.58, 1]}]}, "left-upper-arm": {"rotate": [{"time": 0, "angle": 0}, {"time": 0.15, "angle": 10}, {"time": 0.35, "angle": -40, "curve": [0, 0, 0.58, 1]}, {"time": 0.8, "angle": 5, "curve": [0.42, 0, 1, 1]}, {"time": 1.0, "angle": 0, "curve": [0, 0, 0.58, 1]}]}, "right-upper-arm": {"rotate": [{"time": 0, "angle": 0}, {"time": 0.15, "angle": -10}, {"time": 0.35, "angle": 40, "curve": [0, 0, 0.58, 1]}, {"time": 0.8, "angle": -5, "curve": [0.42, 0, 1, 1]}, {"time": 1.0, "angle": 0, "curve": [0, 0, 0.58, 1]}]}, "left-upper-leg": {"rotate": [{"time": 0, "angle": 0}, {"time": 0.15, "angle": 15, "curve": [0.42, 0, 1, 1]}, {"time": 0.35, "angle": -10, "curve": [0, 0, 0.58, 1]}, {"time": 0.8, "angle": 10, "curve": [0.42, 0, 1, 1]}, {"time": 1.0, "angle": 0, "curve": [0, 0, 0.58, 1]}]}, "left-lower-leg": {"rotate": [{"time": 0, "angle": 0}, {"time": 0.15, "angle": -20, "curve": [0.42, 0, 1, 1]}, {"time": 0.35, "angle": 15, "curve": [0, 0, 0.58, 1]}, {"time": 0.8, "angle": -10, "curve": [0.42, 0, 1, 1]}, {"time": 1.0, "angle": 0, "curve": [0, 0, 0.58, 1]}]}, "right-upper-leg": {"rotate": [{"time": 0, "angle": 0}, {"time": 0.15, "angle": 15, "curve": [0.42, 0, 1, 1]}, {"time": 0.35, "angle": -10, "curve": [0, 0, 0.58, 1]}, {"time": 0.8, "angle": 10, "curve": [0.42, 0, 1, 1]}, {"time": 1.0, "angle": 0, "curve": [0, 0, 0.58, 1]}]}, "right-lower-leg": {"rotate": [{"time": 0, "angle": 0}, {"time": 0.15, "angle": -20, "curve": [0.42, 0, 1, 1]}, {"time": 0.35, "angle": 15, "curve": [0, 0, 0.58, 1]}, {"time": 0.8, "angle": -10, "curve": [0.42, 0, 1, 1]}, {"time": 1.0, "angle": 0, "curve": [0, 0, 0.58, 1]}]}}}}};
+const PART_IMAGES = {"head": "data:image/png;base64,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", "left-foot": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAeCAYAAABuUU38AAAAiElEQVR4nO3YsQ2AIBCF4cdtwAqu4E4O5U6u4AqMoJXmLAA73pH3VSRQ3J9QXYKzrflCUPYcIkcAQAK+EUvO46apOEt5z7X5bIYIwH0txgivN581bwNRCBuFsFEIG4WwUQgbhbBRCBuFsFEIG4WwmS/E748Y9eaz/Sjp7+MR/D6rNd8bEX33ewOnFh0iuE6K9gAAAABJRU5ErkJggg==", "left-lower-arm": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAABGCAYAAAC+ANZHAAAAx0lEQVR4nO3asQ2CcBBG8YOVZARrO3dhBHexs2YEnUmrA8QQipfAmbxXEf7NL1d/Taz0vJ3fa2971ix/VIB1/TC6voBz3Oly3dMUERGvx338TuQITNwRsGUJ7fqhaSJq4bJEtgc7NmsrXi9i8tS/4NGArQTSBNIE0gTSBNIE0gTSBNIE0gTSBNIE0gTSBNIE0gTSBNIE0gTSBNIE0gTSBNIE0gTSBNIE0gTS2pzBzadxFfqfcVnENCascsWf/WBWeoGZVduwfgBRSzbakei8dgAAAABJRU5ErkJggg==", "left-lower-leg": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACYAAABGCAYAAACgyeb0AAAAw0lEQVR4nO3asQ2DMBQGYZsNsgIrZJZMySys4BUyQlI9cIxcnBRhF3cVMs2nV/85dVqfr0/v378r+5bbt8vDnaC2GvgDq1GPdb0N9C7l+A7cAQvUnaC2AJZ9y3kWVBS4ZbCj2zLTtVI6HfNebDSglzCaMJowmjCaMJowmjCaMJowmjCaMJowmjCaMJowmjCaMJowmjCaMJowmjCaMJowmjCaMJowmjDaErOoeio1svlHRymdY7LRV7vsx6IpF3fRLBvFL0cAOjNTgv36AAAAAElFTkSuQmCC", "left-upper-arm": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAABGCAYAAAC+ANZHAAAAy0lEQVR4nO3asQ3CQBAF0T23hEsgJqMXl0AvZMSUADVBtLaxZTkYwR3STGSdk6eNf4mNHpfja+vft+qHe1m+rR5qwJbNoR/AOe5wOv/SFBERz9t1/E7kCExcDdiyhPbDvZSItnBZIrvKjt26Fq8XMXnav2BtwF4CaQJpAmkCaQJpAmkCaQJpAmkCaQJpAmkCaQJpAmkCaQJpAmkCaQJpAmkCaQJpAmkCaQJpAmkCaV3O4ObTuBb6n3FZxDQmbOWKq/1g1vQCM2ttw/oGoIw4Q+/WvToAAAAASUVORK5CYII=", "left-upper-leg": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACEAAAB4CAYAAAB8ZZtQAAAA7ElEQVR4nO3bQRGDMBgF4QQHWIgFLNQC4qoBC7WAhVhAQnvpQgrlGMJh98gw83+T+4vh2zA+36Foya9Qoz49Dt/i/kMaxvfhrwrleVpv/yBKQJ9SleNLzgfIigBQ6/gZJs9TjC0Ae0h36dWTulavUN68x0u0BoQgYksEiSARJIJEkAgSQSJIBIkgESSCRJAIEkEiSASJIBEkgkSQCBJBIkgEiSARJIJEkAgSQSJIBIkgESSCRJAIEkEiSASJIBEkgkSQCBJBIkgEiSARJII6hqPlmPSq7jXVDGGb0V75GoflLDXfEP+D1KxcU38Ak6Y7txG1dTEAAAAASUVORK5CYII=", "right-foot": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAeCAYAAABuUU38AAAAj0lEQVR4nO3YMQ2AMBSE4esLBmqhFrCAFrSgAU9YwEIlwEBKCmEhDL1H7hthuT+E5YWxjxscm5ccAMBaD/mqfIgwDWlbcz5fpBibjXqr3m1eI4DrXnt66EnZ7f4fKRTCRiFsFMJGIWwUwkYhbBTCRiFsFMJGIWz+F1Lftzwpu62+Z3mLqfd29/HeYoDjkL0DWywkXvl20ucAAAAASUVORK5CYII=", "right-lower-arm": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAABGCAYAAAC+ANZHAAAAxUlEQVR4nO3asQ3CQBAF0T23hEsgJqMXl0AvZMQuAWqCaG1jBw5Gwos0E50uetr4t+ft/I4i9cPY1n+bjwrgJfQLuMSdLtdfmiIi4vW4T+9ETsDEHQFbl9B+GFuLqIXLEtkd7Nitq3i9iNlT/4JHA/YSSBNIE0gTSBNIE0gTSBNIE0gTSBNIE0gTSBNIE0gTSBNIE0gTSBNIE0gTSBNIE0gTSBNIE0gTSOtyBrecxlXof8ZlEfOYsMoVN/vBrPQCM6u2Yf0A3rQ4Q6RQOT8AAAAASUVORK5CYII=", "right-lower-leg": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACYAAABGCAYAAACgyeb0AAAAw0lEQVR4nO3asQ2DMBQGYZsNsgIrZJZMySys4BUyQlI9cIxcnBRhF3cVMs2nV/85dVqfr0/v378r+5bbt8vDnaC2GvgDq1GPdb0N9C7l+A7cAQvUnaC2AJZ9y3kWVBS4ZbCj2zLTtVI6HfNebDSglzCaMJowmjCaMJowmjCaMJowmjCaMJowmjCaMJowmjCaMJowmjCaMJowmjCaMJowmjCaMJowmjDaErOoeio1svlHRymdY7LRV7vsx6IpF3fRLBvFL0cAOjNTgv36AAAAAElFTkSuQmCC", "right-upper-arm": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAABGCAYAAAC+ANZHAAAA70lEQVR4nO3asQ3CMBBG4XOUjZwRqNN5hqyQEVghM6SjzghkplCAE2OQKH6BjfReaVm6T1ef82Ha1nlwlnU9n7b87dt14/LiaPOHErB8dgpt330wM/N9+J3s0XqZd0dENjnO96EILp8dPc6HaZv8vH+opbjN5sO/4jU1bs/s8NS/wdKATwFUA6gGUA2gGkA1gGoA1QCqAVQDqAZQDaAaQDWAagDVAKoBVAOoBlANoBpANYBqANUAqgFUA6gGUA2gWjOs9xOkeMxVS/9zXGZ2XDzWssXo6MbF7RtMkaWg6ezoeToR7cbFxcvHkttMb1hvs8VLD4u0MWQAAAAASUVORK5CYII=", "right-upper-leg": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACEAAAB4CAYAAAB8ZZtQAAAA80lEQVR4nO3bSxGDQBAA0QUHWFgLWIgFNERTNGAhFrCwFpCQHFINy++UsOTQfYOial4N56na7vEKO43puff665p4WzwP/b2q1h/FtttF/bo09NPsBSIHNDGeMnxMaQOZEADOGn6ESUP/+R2lAWtIXXTqQfVVW8hn/scmrgaEIGJOBIkgESSCRJAIEkEiSASJIBEkgkSQCBJBIkgEiSARJIJEkAgSQSJIBIkgESSCRJAIEkEiSASJIBEkgkSQCBJBIkgEiSARJIJEkAgSQSJIBIkgESSCag5H82PSUv3XqWYI8xltyW1sLmfp8hviPciZ5dfUb50WPZeyLxpzAAAAAElFTkSuQmCC", "torso": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFAAAACWCAYAAABJoA8EAAAB+klEQVR4nO3V3VXiYBRA0SQd2IItUAs1UBM1UEtasAVLcJ7ChB9FPWtE1uzzFBIe7trrfsk4fNBmu3/76Pn/1HzYjdfuX70J7v3OIS8Az/Genjf/eqZf3+vLfPJ7jXgCuMYDd9kackE8Ai544G63QM6H3TgOg837autNnNYP4H2utdPki9s6bqDt+1qL13Tjf7oRwBjAGMAYwBjAGMDYtN8c7j3DQ2cDYwBjAGMAYwBjAGMAYwBjAGMAYwBjAGMAYwBjAGMAYwBjAGMAYwBjAGMAYwBjAGMAYwBjAGMAYwBjAGMAYwBjAGMAYwBjAGMAYwBjAGMAYwBjAGMAYwBjAGMAYwBjAGMAYwBjAGMAYwBjAGMAYwBjAGMAY9Nu3t57hofOBsYAxgDGAMYAxgDGAMYAxgDGAMYAxgDGAMYAxgDGAMYAxgDGAMYAxgDGAMYAxgDGAMYAxgDGAMYAxgDGAMYAxgDGAMYAxgDGAMYAxgDGAMYAxgDGAMYAxgDGAMYAxgDGAMYAxgDGAMYAxgDGAMYAxgDGAMYAxgDGAMYAxgDGAMYAxgDGAMaOgK8v8z3neLgWr2k+7MY7z/LQnRxhW/i51k7TMAyDLfxe82E3nsBttvu35frpefPzE/3y1pu3LN3F5q0RhwHkMFy+2tYn9urRPUfU385fd38AlDJMBKimj7oAAAAASUVORK5CYII="};
+
+// ─── IMAGE LOADER ──────────────────────────────────────────────────
+const loadedImages = {};
+let imagesLoaded = 0;
+let totalImages = Object.keys(PART_IMAGES).length;
+
+function loadImages(callback) {
+  if (totalImages === 0) { callback(); return; }
+  for (const [name, uri] of Object.entries(PART_IMAGES)) {
+    const img = new Image();
+    img.onload = () => {
+      loadedImages[name] = img;
+      imagesLoaded++;
+      if (imagesLoaded >= totalImages) callback();
+    };
+    img.onerror = () => {
+      console.warn('Failed to load image:', name);
+      imagesLoaded++;
+      if (imagesLoaded >= totalImages) callback();
+    };
+    img.src = uri;
+  }
+}
+
+// ─── SKELETON PARSER ───────────────────────────────────────────────
+class Bone {
+  constructor(data) {
+    this.name = data.name;
+    this.parentName = data.parent || null;
+    this.parent = null;
+    this.children = [];
+
+    // Setup pose
+    this.setupX = data.x || 0;
+    this.setupY = data.y || 0;
+    this.setupRotation = data.rotation || 0;
+    this.setupScaleX = data.scaleX !== undefined ? data.scaleX : 1;
+    this.setupScaleY = data.scaleY !== undefined ? data.scaleY : 1;
+    this.length = data.length || 0;
+
+    // Current pose (setup + animation)
+    this.x = this.setupX;
+    this.y = this.setupY;
+    this.rotation = this.setupRotation;
+    this.scaleX = this.setupScaleX;
+    this.scaleY = this.setupScaleY;
+
+    // World transform (computed)
+    this.worldX = 0;
+    this.worldY = 0;
+    this.worldRotation = 0;
+    this.worldScaleX = 1;
+    this.worldScaleY = 1;
+  }
+
+  resetToSetupPose() {
+    this.x = this.setupX;
+    this.y = this.setupY;
+    this.rotation = this.setupRotation;
+    this.scaleX = this.setupScaleX;
+    this.scaleY = this.setupScaleY;
+  }
+
+  updateWorldTransform() {
+    if (this.parent) {
+      const pRad = this.parent.worldRotation * Math.PI / 180;
+      const cos = Math.cos(pRad);
+      const sin = Math.sin(pRad);
+      this.worldX = this.parent.worldX + (this.x * cos - this.y * sin) * this.parent.worldScaleX;
+      this.worldY = this.parent.worldY + (this.x * sin + this.y * cos) * this.parent.worldScaleY;
+      this.worldRotation = this.parent.worldRotation + this.rotation;
+      this.worldScaleX = this.parent.worldScaleX * this.scaleX;
+      this.worldScaleY = this.parent.worldScaleY * this.scaleY;
+    } else {
+      this.worldX = this.x;
+      this.worldY = this.y;
+      this.worldRotation = this.rotation;
+      this.worldScaleX = this.scaleX;
+      this.worldScaleY = this.scaleY;
+    }
+  }
+}
+
+class Slot {
+  constructor(data) {
+    this.name = data.name;
+    this.boneName = data.bone;
+    this.bone = null;
+    this.attachmentName = data.attachment || null;
+    this.color = data.color || "FFFFFFFF";
+  }
+}
+
+class Skeleton {
+  constructor(data) {
+    this.bones = [];
+    this.boneMap = {};
+    this.slots = [];
+    this.slotMap = {};
+    this.skins = data.skins || [];
+    this.animations = data.animations || {};
+
+    // Build bones
+    for (const bd of (data.bones || [])) {
+      const bone = new Bone(bd);
+      this.bones.push(bone);
+      this.boneMap[bone.name] = bone;
+    }
+
+    // Link parents
+    for (const bone of this.bones) {
+      if (bone.parentName) {
+        bone.parent = this.boneMap[bone.parentName] || null;
+        if (bone.parent) bone.parent.children.push(bone);
+      }
+    }
+
+    // Build slots
+    for (const sd of (data.slots || [])) {
+      const slot = new Slot(sd);
+      slot.bone = this.boneMap[slot.boneName] || null;
+      this.slots.push(slot);
+      this.slotMap[slot.name] = slot;
+    }
+  }
+
+  resetToSetupPose() {
+    for (const bone of this.bones) bone.resetToSetupPose();
+  }
+
+  updateWorldTransforms() {
+    for (const bone of this.bones) bone.updateWorldTransform();
+  }
+
+  getAttachment(slotName, attachmentName) {
+    for (const skin of this.skins) {
+      const slotAtts = skin.attachments[slotName];
+      if (slotAtts && slotAtts[attachmentName]) {
+        return slotAtts[attachmentName];
+      }
+    }
+    return null;
+  }
+}
+
+// ─── ANIMATION ENGINE ──────────────────────────────────────────────
+
+function lerp(a, b, t) { return a + (b - a) * t; }
+
+function evaluateBezier(cx1, cy1, cx2, cy2, t) {
+  // Attempt to find t_curve for given t_time using Newton-Raphson
+  let x = t;
+  for (let i = 0; i < 8; i++) {
+    const bx = 3*cx1*(1-x)*(1-x)*x + 3*cx2*(1-x)*x*x + x*x*x;
+    const dx = 3*cx1*(1-2*x+x*x) + 6*cx2*x*(1-x) + 3*x*x - 3*cx1*2*x*(1-x);
+    const dbx = 3*cx1*(1-x)*(1-x) - 6*cx1*(1-x)*x + 6*cx2*(1-x)*x - 3*cx2*x*x + 3*x*x;
+    if (Math.abs(bx - t) < 0.0001) break;
+    x -= (bx - t) / (dbx || 0.0001);
+    x = Math.max(0, Math.min(1, x));
+  }
+  // Evaluate y at found x
+  return 3*cy1*(1-x)*(1-x)*x + 3*cy2*(1-x)*x*x + x*x*x;
+}
+
+function interpolateCurve(curve, t) {
+  if (!curve || curve === "linear") return t;
+  if (curve === "stepped") return 0;
+  if (Array.isArray(curve) && curve.length >= 4) {
+    return evaluateBezier(curve[0], curve[1], curve[2], curve[3], t);
+  }
+  return t;
+}
+
+function getAnimationDuration(animData) {
+  let maxTime = 0;
+  if (animData.bones) {
+    for (const boneName in animData.bones) {
+      for (const tlType in animData.bones[boneName]) {
+        const keyframes = animData.bones[boneName][tlType];
+        if (keyframes.length > 0) {
+          maxTime = Math.max(maxTime, keyframes[keyframes.length - 1].time || 0);
+        }
+      }
+    }
+  }
+  return maxTime || 1;
+}
+
+function applyAnimation(skeleton, animName, time) {
+  const anim = skeleton.animations[animName];
+  if (!anim) return;
+
+  const duration = getAnimationDuration(anim);
+  const loopTime = time % duration;
+
+  // Reset to setup pose first
+  skeleton.resetToSetupPose();
+
+  if (!anim.bones) return;
+
+  for (const boneName in anim.bones) {
+    const bone = skeleton.boneMap[boneName];
+    if (!bone) continue;
+
+    const boneTimelines = anim.bones[boneName];
+
+    for (const tlType in boneTimelines) {
+      const keyframes = boneTimelines[tlType];
+      if (!keyframes || keyframes.length === 0) continue;
+
+      // Find surrounding keyframes
+      let k0 = keyframes[0], k1 = null;
+      for (let i = 0; i < keyframes.length - 1; i++) {
+        if (loopTime >= (keyframes[i].time || 0) && loopTime <= (keyframes[i+1].time || 0)) {
+          k0 = keyframes[i];
+          k1 = keyframes[i+1];
+          break;
+        }
+      }
+
+      if (!k1) {
+        // Past last keyframe or only one keyframe
+        k0 = keyframes[keyframes.length - 1];
+        applyKeyframe(bone, tlType, k0, null, 0);
+      } else {
+        const t0 = k0.time || 0;
+        const t1 = k1.time || 0;
+        const rawT = t1 > t0 ? (loopTime - t0) / (t1 - t0) : 0;
+        const t = interpolateCurve(k0.curve, rawT);
+        applyKeyframe(bone, tlType, k0, k1, t);
+      }
+    }
+  }
+
+  skeleton.updateWorldTransforms();
+}
+
+function applyKeyframe(bone, type, k0, k1, t) {
+  switch(type) {
+    case "rotate":
+      const a0 = k0.angle || 0;
+      const a1 = k1 ? (k1.angle || 0) : a0;
+      bone.rotation = bone.setupRotation + lerp(a0, a1, t);
+      break;
+    case "translate":
+      const x0 = k0.x || 0, y0 = k0.y || 0;
+      const x1 = k1 ? (k1.x || 0) : x0;
+      const y1 = k1 ? (k1.y || 0) : y0;
+      bone.x = bone.setupX + lerp(x0, x1, t);
+      bone.y = bone.setupY + lerp(y0, y1, t);
+      break;
+    case "scale":
+      const sx0 = k0.x !== undefined ? k0.x : 1;
+      const sy0 = k0.y !== undefined ? k0.y : 1;
+      const sx1 = k1 ? (k1.x !== undefined ? k1.x : 1) : sx0;
+      const sy1 = k1 ? (k1.y !== undefined ? k1.y : 1) : sy0;
+      bone.scaleX = bone.setupScaleX * lerp(sx0, sx1, t);
+      bone.scaleY = bone.setupScaleY * lerp(sy0, sy1, t);
+      break;
+  }
+}
+
+// ─── RENDERER ──────────────────────────────────────────────────────
+
+class Renderer {
+  constructor(canvas) {
+    this.canvas = canvas;
+    this.ctx = canvas.getContext('2d');
+    this.showBones = false;
+    this.showOrigin = false;
+    this.offsetX = canvas.width / 2;
+    this.offsetY = canvas.height - 80;
+    this.scale = 1;
+  }
+
+  clear() {
+    this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+
+    // Grid
+    this.ctx.strokeStyle = '#1e2d4a';
+    this.ctx.lineWidth = 1;
+    const step = 50;
+    for (let x = this.offsetX % step; x < this.canvas.width; x += step) {
+      this.ctx.beginPath();
+      this.ctx.moveTo(x, 0);
+      this.ctx.lineTo(x, this.canvas.height);
+      this.ctx.stroke();
+    }
+    for (let y = this.offsetY % step; y < this.canvas.height; y += step) {
+      this.ctx.beginPath();
+      this.ctx.moveTo(0, y);
+      this.ctx.lineTo(this.canvas.width, y);
+      this.ctx.stroke();
+    }
+
+    if (this.showOrigin) {
+      this.ctx.strokeStyle = '#e94560';
+      this.ctx.lineWidth = 1;
+      this.ctx.beginPath();
+      this.ctx.moveTo(this.offsetX - 15, this.offsetY);
+      this.ctx.lineTo(this.offsetX + 15, this.offsetY);
+      this.ctx.stroke();
+      this.ctx.beginPath();
+      this.ctx.moveTo(this.offsetX, this.offsetY - 15);
+      this.ctx.lineTo(this.offsetX, this.offsetY + 15);
+      this.ctx.stroke();
+    }
+  }
+
+  worldToScreen(x, y) {
+    return [
+      this.offsetX + x * this.scale,
+      this.offsetY - y * this.scale  // Spine Y is up, Canvas Y is down
+    ];
+  }
+
+  drawSkeleton(skeleton) {
+    // Draw attachments in slot order (draw order)
+    for (const slot of skeleton.slots) {
+      if (!slot.bone || !slot.attachmentName) continue;
+
+      const att = skeleton.getAttachment(slot.name, slot.attachmentName);
+      if (!att) continue;
+
+      const img = loadedImages[slot.attachmentName];
+      if (!img) continue;
+
+      this.drawAttachment(slot.bone, att, img);
+    }
+
+    // Draw bone debug overlay
+    if (this.showBones) {
+      this.drawBoneOverlay(skeleton);
+    }
+  }
+
+  drawAttachment(bone, att, img) {
+    const ctx = this.ctx;
+    ctx.save();
+
+    // Move to bone's world position
+    const [sx, sy] = this.worldToScreen(bone.worldX, bone.worldY);
+    ctx.translate(sx, sy);
+
+    // Apply world rotation (negate for canvas coords)
+    ctx.rotate(-bone.worldRotation * Math.PI / 180);
+
+    // Apply bone scale
+    ctx.scale(bone.worldScaleX * this.scale, bone.worldScaleY * this.scale);
+
+    // Apply attachment offset and rotation
+    const attX = att.x || 0;
+    const attY = att.y || 0;
+    const attRot = att.rotation || 0;
+    const attScaleX = att.scaleX || 1;
+    const attScaleY = att.scaleY || 1;
+
+    ctx.translate(attX, -attY);  // Spine Y up → Canvas Y down
+    ctx.rotate(-attRot * Math.PI / 180);
+    ctx.scale(attScaleX, attScaleY);
+
+    // Draw the image centered
+    const w = att.width || img.width;
+    const h = att.height || img.height;
+    ctx.drawImage(img, -w / 2, -h / 2, w, h);
+
+    ctx.restore();
+  }
+
+  drawBoneOverlay(skeleton) {
+    const ctx = this.ctx;
+
+    for (const bone of skeleton.bones) {
+      const [sx, sy] = this.worldToScreen(bone.worldX, bone.worldY);
+
+      // Draw bone line
+      if (bone.length > 0) {
+        const rad = bone.worldRotation * Math.PI / 180;
+        const ex = sx + Math.cos(-rad) * bone.length * this.scale * bone.worldScaleX;
+        const ey = sy + Math.sin(-rad) * bone.length * this.scale * bone.worldScaleY;
+
+        ctx.strokeStyle = '#00ff8844';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveTo(sx, sy);
+        ctx.lineTo(ex, ey);
+        ctx.stroke();
+      }
+
+      // Draw joint circle
+      ctx.fillStyle = bone.parent ? '#00ff88' : '#ff4444';
+      ctx.beginPath();
+      ctx.arc(sx, sy, bone.parent ? 3 : 5, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Draw bone name
+      ctx.fillStyle = '#88aabb66';
+      ctx.font = '9px sans-serif';
+      ctx.fillText(bone.name, sx + 5, sy - 5);
+    }
+  }
+}
+
+// ─── APP ───────────────────────────────────────────────────────────
+
+let skeleton, renderer;
+let currentAnim = '';
+let animTime = 0;
+let playing = true;
+let speed = 1;
+let lastFrameTime = 0;
+let frameCount = 0;
+let fpsTime = 0;
+let fps = 0;
+
+function init() {
+  const canvas = document.getElementById('canvas');
+  skeleton = new Skeleton(SKELETON);
+  renderer = new Renderer(canvas);
+
+  // Auto-fit scale
+  const skelHeight = SKELETON.skeleton?.height || 600;
+  renderer.scale = Math.min(1.5, (canvas.height - 160) / skelHeight);
+
+  // Populate animation selector
+  const select = document.getElementById('animSelect');
+  const animNames = Object.keys(skeleton.animations);
+  for (const name of animNames) {
+    const opt = document.createElement('option');
+    opt.value = name;
+    opt.textContent = name;
+    select.appendChild(opt);
+  }
+  if (animNames.length > 0) {
+    currentAnim = animNames[0];
+    select.value = currentAnim;
+  }
+
+  // Controls
+  document.getElementById('playPauseBtn').onclick = () => {
+    playing = !playing;
+    const btn = document.getElementById('playPauseBtn');
+    btn.textContent = playing ? '⏸ Pause' : '▶ Play';
+    btn.classList.toggle('active', playing);
+  };
+
+  select.onchange = () => {
+    currentAnim = select.value;
+    animTime = 0;
+  };
+
+  const speedSlider = document.getElementById('speedSlider');
+  speedSlider.oninput = () => {
+    speed = parseFloat(speedSlider.value);
+    document.getElementById('speedLabel').textContent = speed.toFixed(1) + 'x';
+  };
+
+  document.getElementById('showBones').onchange = (e) => {
+    renderer.showBones = e.target.checked;
+  };
+
+  document.getElementById('showOrigin').onchange = (e) => {
+    renderer.showOrigin = e.target.checked;
+  };
+
+  lastFrameTime = performance.now();
+  fpsTime = lastFrameTime;
+  requestAnimationFrame(frame);
+}
+
+function frame(timestamp) {
+  const dt = (timestamp - lastFrameTime) / 1000;
+  lastFrameTime = timestamp;
+
+  // FPS counter
+  frameCount++;
+  if (timestamp - fpsTime >= 1000) {
+    fps = frameCount;
+    frameCount = 0;
+    fpsTime = timestamp;
+    document.getElementById('fpsDisplay').textContent = 'FPS: ' + fps;
+  }
+
+  if (playing) {
+    animTime += dt * speed;
+  }
+
+  // Apply animation
+  if (currentAnim) {
+    applyAnimation(skeleton, currentAnim, animTime);
+  } else {
+    skeleton.resetToSetupPose();
+    skeleton.updateWorldTransforms();
+  }
+
+  // Render
+  renderer.clear();
+  renderer.drawSkeleton(skeleton);
+
+  // Update time display
+  const anim = skeleton.animations[currentAnim];
+  const duration = anim ? getAnimationDuration(anim) : 0;
+  const displayTime = duration > 0 ? (animTime % duration) : 0;
+  document.getElementById('timeDisplay').textContent =
+    'Time: ' + displayTime.toFixed(2) + 's / ' + duration.toFixed(2) + 's';
+
+  requestAnimationFrame(frame);
+}
+
+// Start when images are loaded
+loadImages(init);
+</script>
+</body>
+</html>

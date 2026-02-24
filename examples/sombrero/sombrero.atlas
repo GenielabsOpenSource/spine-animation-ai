@@ -1,0 +1,75 @@
+sombrero.png
+size: 4096,2048
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+torso
+  rotate: false
+  xy: 2, 2
+  size: 958, 1097
+  orig: 958, 1097
+  offset: 0, 0
+  index: -1
+right-arm
+  rotate: false
+  xy: 962, 2
+  size: 304, 749
+  orig: 304, 749
+  offset: 0, 0
+  index: -1
+right-leg
+  rotate: false
+  xy: 1268, 2
+  size: 454, 741
+  orig: 454, 741
+  offset: 0, 0
+  index: -1
+left-leg
+  rotate: false
+  xy: 1724, 2
+  size: 453, 740
+  orig: 453, 740
+  offset: 0, 0
+  index: -1
+head
+  rotate: false
+  xy: 2179, 2
+  size: 601, 734
+  orig: 601, 734
+  offset: 0, 0
+  index: -1
+hat
+  rotate: false
+  xy: 2782, 2
+  size: 1221, 649
+  orig: 1221, 649
+  offset: 0, 0
+  index: -1
+right-thigh
+  rotate: false
+  xy: 2, 1101
+  size: 353, 583
+  orig: 353, 583
+  offset: 0, 0
+  index: -1
+left-thigh
+  rotate: false
+  xy: 357, 1101
+  size: 376, 526
+  orig: 376, 526
+  offset: 0, 0
+  index: -1
+waist
+  rotate: false
+  xy: 735, 1101
+  size: 584, 498
+  orig: 584, 498
+  offset: 0, 0
+  index: -1
+left-hand
+  rotate: false
+  xy: 1321, 1101
+  size: 722, 269
+  orig: 722, 269
+  offset: 0, 0
+  index: -1

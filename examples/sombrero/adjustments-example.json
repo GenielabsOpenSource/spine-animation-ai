@@ -1,0 +1,71 @@
+{
+  "_comment": "Example AI adjustment output for the sombrero character.",
+  "_comment2": "Each part records: original_offset (from atlas), user_offset (AI-suggested delta), final_offset (applied result).",
+  "_comment3": "draw_order lists parts back-to-front (index 0 = furthest back).",
+
+  "adjustments": {
+    "right-arm": {
+      "original_offset": { "x": -1.5, "y": 0 },
+      "user_offset":     { "dx": -29.4, "dy": -84.1, "drot": 0 },
+      "final_offset":    { "x": -30.9, "y": -84.1 }
+    },
+    "left-leg": {
+      "original_offset": { "x": -9.5, "y": -106.5 },
+      "user_offset":     { "dx": -45.1, "dy": -46.3, "drot": 0 },
+      "final_offset":    { "x": -54.6, "y": -152.8 }
+    },
+    "right-thigh": {
+      "original_offset": { "x": 11.5, "y": -81.5 },
+      "user_offset":     { "dx": -87.8, "dy": -63.4, "drot": 0 },
+      "final_offset":    { "x": -76.3, "y": -144.9 }
+    },
+    "right-leg": {
+      "original_offset": { "x": 7.5, "y": -126.5 },
+      "user_offset":     { "dx": 57.3, "dy": -6.1, "drot": 0 },
+      "final_offset":    { "x": 64.8, "y": -132.6 }
+    },
+    "left-thigh": {
+      "original_offset": { "x": 10, "y": -76 },
+      "user_offset":     { "dx": 95.1, "dy": -79.3, "drot": 0 },
+      "final_offset":    { "x": 105.1, "y": -155.3 }
+    },
+    "waist": {
+      "original_offset": { "x": -8.5, "y": -39.5 },
+      "user_offset":     { "dx": 29.3, "dy": -36.6, "drot": 0 },
+      "final_offset":    { "x": 20.8, "y": -76.1 }
+    },
+    "left-hand": {
+      "original_offset": { "x": 0.5, "y": 2 },
+      "user_offset":     { "dx": 41.5, "dy": 0.3, "drot": 0 },
+      "final_offset":    { "x": 42, "y": 2.3 }
+    },
+    "torso": {
+      "original_offset": { "x": 25.5, "y": 105 },
+      "user_offset":     { "dx": 0, "dy": 0, "drot": 0 },
+      "final_offset":    { "x": 25.5, "y": 105 }
+    },
+    "hat": {
+      "original_offset": { "x": 1.5, "y": -1 },
+      "user_offset":     { "dx": 0, "dy": 0, "drot": 0 },
+      "final_offset":    { "x": 1.5, "y": -1 }
+    },
+    "head": {
+      "original_offset": { "x": 3, "y": 20.5 },
+      "user_offset":     { "dx": -18.3, "dy": -2, "drot": 0 },
+      "final_offset":    { "x": -15.3, "y": 18.5 }
+    }
+  },
+
+  "draw_order": [
+    "right-arm",
+    "left-leg",
+    "right-thigh",
+    "right-leg",
+    "left-thigh",
+    "waist",
+    "left-hand",
+    "torso",
+    "hat",
+    "head"
+  ]
+}
