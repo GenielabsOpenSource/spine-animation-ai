@@ -2,7 +2,7 @@
 
 > An AI-powered Claude skill for creating, rigging, and refining Spine 2D skeletal animations — from raw assets to interactive previews.
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-purple.svg)](LICENSE)
+[![License: PolyForm NC](https://img.shields.io/badge/License-PolyForm%20NC%201.0-blue.svg)](LICENSE)
 [![Spine Version](https://img.shields.io/badge/Spine-4.2-blue.svg)](http://esotericsoftware.com)
 [![Claude Skill](https://img.shields.io/badge/Claude-Skill-orange.svg)](SKILL.md)
 [![OpenClaw](https://img.shields.io/badge/OpenClaw-Compatible-green.svg)](https://openclaw.ai)
@@ -313,7 +313,7 @@ Ideas for contributions:
 
 ## License
 
-[MIT](LICENSE) — free for personal and commercial use.
+[PolyForm Noncommercial 1.0.0](LICENSE) — free for all non-commercial use. Commercial use requires a separate license — contact us at [genielabs.tech](https://genielabs.tech).
 
 ---
 
