@@ -82,6 +82,33 @@ Then just describe what you want:
 Claude will run the full pipeline and deliver a working `skeleton.json` + `preview.html`.
 
 ---
+### With Claude Directly (No OpenClaw)
+
+You can use this skill with **any Claude interface** — [claude.ai](https://claude.ai), Claude Desktop, or the API — no extra software needed.
+
+#### Option A: Claude Projects (Recommended)
+
+1. Go to [claude.ai](https://claude.ai) and create a new **Project**
+2. Open **Project Instructions**
+3. Copy the full contents of [`SKILL.md`](SKILL.md) and paste it in
+4. Save — Claude will now have the full Spine Animation skill baked into every conversation in that project
+5. Upload your character assets and describe what you want:
+
+```
+"I have separated body part PNGs for my character.
+ Create idle and walk animations."
+```
+
+#### Option B: Paste Into Any Conversation
+
+1. Open [`SKILL.md`](SKILL.md) and copy its contents
+2. Paste it at the start of a new Claude conversation
+3. Follow with your request and upload your assets
+
+> **Note:** For the automated scripts (`position_parts.py`, etc.) Claude will generate the commands — you run them locally. Claude handles the creative + structural work; your machine runs the Python pipeline.
+
+---
+
 
 ### Manual / Scripted Pipeline
 
