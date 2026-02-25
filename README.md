@@ -64,34 +64,14 @@ Think of it as a Spine rigging co-pilot. You provide the art assets; Claude does
 
 ## Quick Start
 
-### With OpenClaw / Claude Agent
+### Option A: Claude Projects (Recommended)
 
-Install the skill:
+The easiest way — works with any Claude account, no extra software needed.
 
-```bash
-openclaw skills install spine-animation-ai
-```
-
-Then just describe what you want:
-
-```
-"Animate this sombrero character. I have the atlas and PNG.
- Give me idle, walk, and wave animations."
-```
-
-Claude will run the full pipeline and deliver a working `skeleton.json` + `preview.html`.
-
----
-### With Claude Directly (No OpenClaw)
-
-You can use this skill with **any Claude interface** — [claude.ai](https://claude.ai), Claude Desktop, or the API — no extra software needed.
-
-#### Option A: Claude Projects (Recommended)
-
-1. Go to [claude.ai](https://claude.ai) and create a new **Project**
-2. Open **Project Instructions**
+1. Go to [claude.ai](https://claude.ai) → create a new **Project**
+2. Open **Project Knowledge** → **Add content**
 3. Copy the full contents of [`SKILL.md`](SKILL.md) and paste it in
-4. Save — Claude will now have the full Spine Animation skill baked into every conversation in that project
+4. Save — Claude now has the full skill baked in, **including all scripts embedded inline**
 5. Upload your character assets and describe what you want:
 
 ```
@@ -99,18 +79,25 @@ You can use this skill with **any Claude interface** — [claude.ai](https://cla
  Create idle and walk animations."
 ```
 
-#### Option B: Paste Into Any Conversation
+Claude will write the scripts to disk, run the pipeline, and deliver `skeleton.json` + `preview.html`.
 
-1. Open [`SKILL.md`](SKILL.md) and copy its contents
-2. Paste it at the start of a new Claude conversation
-3. Follow with your request and upload your assets
-
-> **Note:** For the automated scripts (`position_parts.py`, etc.) Claude will generate the commands — you run them locally. Claude handles the creative + structural work; your machine runs the Python pipeline.
+> **Why it works:** `SKILL.md` is auto-generated with all 4 Python scripts embedded inside it — Claude extracts and runs them without needing to clone the repo.
 
 ---
 
+### Option B: Claude Custom Skill (`/mnt/skills/` environments)
 
-### Manual / Scripted Pipeline
+For Claude environments that support mounted skill directories:
+
+```bash
+git clone https://github.com/GenielabsOpenSource/spine-animation-ai.git /mnt/skills/user/spine-animation
+```
+
+Claude will automatically discover and load the skill on next session start.
+
+---
+
+### Option C: Manual Pipeline (no Claude needed)
 
 **1. Auto-position parts from a reference image**
 
@@ -212,12 +199,16 @@ Open [`demo/sombrero_editor.html`](demo/sombrero_editor.html) to interactively a
 
 ```
 spine-animation-ai/
-├── SKILL.md                        ← Claude agent skill definition
+├── SKILL.md                        ← Auto-generated (don't edit directly)
+├── SKILL.template.md               ← Human-editable source (edit this)
+├── build_skill.py                  ← Builds SKILL.md from template + scripts
 ├── scripts/
 │   ├── position_parts.py           ← SIFT+RANSAC auto-positioning
 │   ├── build_spine_json.py         ← Spine JSON builder
 │   ├── make_atlas.py               ← Texture atlas packer
 │   └── generate_spine_player.py    ← HTML preview generator
+├── .github/workflows/
+│   └── build-skill.yml             ← Auto-rebuilds SKILL.md on push
 ├── references/
 │   └── spine-json-spec.md          ← Spine format reference
 ├── examples/
@@ -322,6 +313,27 @@ See [docs/claude-prompting-guide.md](docs/claude-prompting-guide.md) for more ex
 
 All presets use **bezier easing** (`[0.25, 0, 0.75, 1]`) following the
 [12 principles of animation](https://en.wikipedia.org/wiki/Twelve_basic_principles_of_animation).
+
+---
+
+## How SKILL.md Stays in Sync
+
+`SKILL.md` is **auto-generated** — don't edit it directly. Instead:
+
+1. Edit `SKILL.template.md` (the prose and instructions)
+2. Edit scripts in `scripts/` (the actual code)
+3. Push to `main` — GitHub Actions runs `build_skill.py` which:
+   - Reads `SKILL.template.md`
+   - Finds all `<!-- EMBED:scripts/filename.py -->` markers
+   - Injects the actual script contents into collapsible `<details>` blocks
+   - Commits the updated `SKILL.md` automatically
+
+This means `SKILL.md` is always a **self-contained document** — when someone pastes it into Claude Projects, Claude has the actual script code right there, no cloning needed.
+
+To build locally:
+```bash
+python build_skill.py
+```
 
 ---
 

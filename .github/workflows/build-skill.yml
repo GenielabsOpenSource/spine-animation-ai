@@ -1,0 +1,42 @@
+name: Build SKILL.md
+
+on:
+  push:
+    paths:
+      - 'scripts/**'
+      - 'SKILL.template.md'
+      - '.github/workflows/build-skill.yml'
+      - 'build_skill.py'
+    branches: [main]
+  workflow_dispatch:  # allow manual trigger
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      
+      - name: Build SKILL.md from template + scripts
+        run: python build_skill.py
+      
+      - name: Check for changes
+        id: diff
+        run: |
+          git diff --quiet SKILL.md && echo "changed=false" >> $GITHUB_OUTPUT || echo "changed=true" >> $GITHUB_OUTPUT
+      
+      - name: Commit updated SKILL.md
+        if: steps.diff.outputs.changed == 'true'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add SKILL.md
+          git commit -m "Auto-update SKILL.md with latest scripts [skip ci]"
+          git push
