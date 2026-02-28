@@ -99,6 +99,23 @@ Claude will automatically discover and load the skill on next session start.
 
 ### Option C: Manual Pipeline (no Claude needed)
 
+**Step 0: Split a Full Character Into Parts (New!)**
+
+If you only have a single character image (not separated body parts), `split_character.py`
+uses Google Gemini to generate a deconstructed sprite atlas and then segments it into
+individual transparent PNGs via OpenCV connected-components analysis.
+
+Prerequisites:
+- `GEMINI_API_KEY` environment variable — get a free key at https://aistudio.google.com/app/apikey
+- `pip install google-generativeai`
+
+```bash
+GEMINI_API_KEY=your_key python3 scripts/split_character.py character.png \
+  --output-dir parts/
+```
+
+Skip this step if you already have separated body-part PNGs.
+
 **1. Auto-position parts from a reference image**
 
 ```bash

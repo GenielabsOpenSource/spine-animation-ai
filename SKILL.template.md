@@ -24,7 +24,7 @@ at the start of every session.
 
 ```bash
 mkdir -p /home/claude/spine-scripts
-pip install opencv-python Pillow numpy --break-system-packages -q
+pip install opencv-python Pillow numpy google-generativeai --break-system-packages -q
 ```
 
 ### Embedded Scripts
@@ -32,6 +32,8 @@ pip install opencv-python Pillow numpy --break-system-packages -q
 The following scripts are auto-injected from the repository's `scripts/` directory.
 **Claude: read these carefully, then write each one to `/home/claude/spine-scripts/`**
 before running the pipeline.
+
+<!-- EMBED:scripts/split_character.py -->
 
 <!-- EMBED:scripts/position_parts.py -->
 
@@ -44,7 +46,7 @@ before running the pipeline.
 After writing the scripts, verify:
 ```bash
 ls /home/claude/spine-scripts/
-# Should show: position_parts.py  build_spine_json.py  make_atlas.py  generate_spine_player.py
+# Should show: split_character.py  position_parts.py  build_spine_json.py  make_atlas.py  generate_spine_player.py
 ```
 
 ---
@@ -68,6 +70,24 @@ The user should also say what animations they want (idle, walk, run, attack, wav
 ```
 User Assets → Analyze Parts → [Auto-Position if reference] → Build Skeleton → Animate → Preview
 ```
+
+### Step 0.5: Generate Parts From a Full Character Image (Optional)
+
+If the user only has a **single full character image** (not separated body parts), use
+`split_character.py` to generate a deconstructed sprite atlas via Google Gemini and then
+automatically segment it into individual part PNGs.
+
+**Requires:** `GEMINI_API_KEY` environment variable (free key at https://aistudio.google.com/app/apikey).
+
+```bash
+GEMINI_API_KEY=your_key python /home/claude/spine-scripts/split_character.py character.png \
+  --output-dir parts/
+```
+
+This sends the character image to Gemini, which generates a flat sprite-sheet atlas with
+all body parts separated. OpenCV connected-components analysis then crops each part into
+its own transparent PNG. The resulting `parts/` directory can be fed directly into
+**Step 1** (`position_parts.py`).
 
 ### Step 1: Analyze the Assets
 
