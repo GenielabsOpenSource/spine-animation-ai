@@ -10,13 +10,8 @@
 ---
 
 <p align="center">
-  <img src="demo/character_reference.png" alt="Static character reference" height="320"/>
-  &nbsp;&nbsp;
-  <strong style="font-size:2em">→</strong>
-  &nbsp;&nbsp;
-  <img src="demo/sombrero_demo.gif" alt="AI-rigged idle animation" height="320"/>
+  <video src="demo/flow.mp4" autoplay loop muted playsinline width="100%"></video>
 </p>
-<p align="center"><em>Static reference image → AI-generated Spine animation</em></p>
 
 <p align="center">
   <a href="https://GenielabsOpenSource.github.io/spine-animation-ai/demo/sombrero_idle.html"><strong>▶ Live Animation Preview</strong></a>
