@@ -10,7 +10,7 @@
 ---
 
 <p align="center">
-  <video src="demo/flow.mp4" autoplay loop muted playsinline width="100%"></video>
+  <img src="demo/flow.gif" alt="Spine Animation AI demo" width="100%"/>
 </p>
 
 <p align="center">
