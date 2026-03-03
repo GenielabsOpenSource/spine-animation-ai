@@ -10,7 +10,7 @@
 ---
 
 <p align="center">
-  <img src="demo/flow.gif" alt="Spine Animation AI demo" width="100%"/>
+  <img src="demo/flow.gif" alt="Spine Animation AI demo" width="50%"/>
 </p>
 
 <p align="center">
