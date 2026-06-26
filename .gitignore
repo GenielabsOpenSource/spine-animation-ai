@@ -6,7 +6,7 @@ __pycache__/
 venv/
 
 # ── Node / Vite ─────────────────────────────────────────
-node_modules/
+node_modules
 dist/
 .vite/
 *.tsbuildinfo
