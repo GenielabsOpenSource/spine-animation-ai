@@ -1,0 +1,255 @@
+/* Genie Studio — Color & Type tokens
+   Source: apps/web/src/index.css (Tailwind v4 @theme block).
+   Mirrors the production design tokens 1:1, exposed as :root CSS vars. */
+
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap");
+
+:root {
+  /* ---------- Charcoal: black & white scale (UI chrome, text) ---------- */
+  --charcoal-0: #ffffff;
+  --charcoal-1: #f9f9f9;
+  --charcoal-2: #e3e3e3;
+  --charcoal-2-5: #b9b7b6;
+  --charcoal-3: #aaa9a7;
+  --charcoal-4: #787673;
+  --charcoal-5: #4b4a48;
+  --charcoal-6: #373634;
+  --charcoal-7: #222120;
+  --charcoal-8: #101010;
+
+  /* ---------- Genie: brand blue scale (primary, links, focus) ---------- */
+  --genie-1: #f7fcff;
+  --genie-2: #cceaff;
+  --genie-2-5: #c2e6ff;
+  --genie-3: #b0dfff;
+  --genie-4: #45b3fd; /* canonical brand blue */
+  --genie-5: #2b7cb2;
+  --genie-6: #17425f;
+  --genie-7: #142938;
+  --genie-8: #111a20;
+
+  /* ---------- Highlight: pale-blue tints for hover/selection ---------- */
+  --highlight-1: #f0f9ff;
+  --highlight-2: #e8f6ff;
+  --highlight-3: #e1f3ff;
+  --highlight-4: #d5eeff;
+
+  /* ---------- Mag: magenta accent (destructive, gradient pops) ---------- */
+  --mag-1: #fff7fa;
+  --mag-2: #ffcce0;
+  --mag-3: #ffadcd;
+  --mag-4: #ff1c74;
+  --mag-5: #db0055;
+  --mag-6: #75002d;
+
+  /* ---------- Mala: red scale (errors, danger states) ---------- */
+  --mala-1: #fff8f7;
+  --mala-2: #ffcfcc;
+  --mala-3: #ffb5b0;
+  --mala-4: #fe837b;
+  --mala-5: #fd7168;
+  --mala-6: #fd5145;
+  --mala-7: #d74338;
+  --mala-8: #b2342b;
+  --mala-9: #5f1b17;
+  --mala-10: #381614;
+  --mala-11: #201211;
+
+  /* ---------- Bina: green scale (success, generation complete) ---------- */
+  --bina-1: #f7fffb;
+  --bina-2: #d6ffeb;
+  --bina-3: #b8ffdb;
+  --bina-4: #9afecc;
+  --bina-5: #45fda1;
+  --bina-6: #0df280;
+  --bina-7: #1ae37f;
+  --bina-8: #30ca7d;
+  --bina-9: #175f3b;
+  --bina-10: #143826;
+  --bina-11: #112019;
+
+  /* ---------- Canvas & soft backgrounds (frame fills, props) ---------- */
+  --canvas: #f3f4f5;
+  --bgs-1: #f9fafa;
+  --bgs-2: #f2ede7;
+  --bgs-3: #fbe99d;
+  --bgs-4: #f6cab4;
+  --bgs-5: #b0dfff;
+  --bgs-6: #e1fdb8;
+  --bgs-7: #f7d2f3;
+
+  /* ---------- Semantic aliases ---------- */
+  --background: var(--charcoal-0);
+  --foreground: var(--charcoal-8);
+  --card: var(--charcoal-0);
+  --card-foreground: var(--charcoal-8);
+  --popover: var(--charcoal-0);
+  --popover-foreground: var(--charcoal-8);
+  --primary: var(--genie-4);
+  --primary-foreground: var(--charcoal-0);
+  --secondary: var(--charcoal-1);
+  --secondary-foreground: var(--charcoal-8);
+  --muted: var(--canvas);
+  --muted-foreground: var(--charcoal-4);
+  --accent: var(--genie-2);
+  --accent-foreground: var(--genie-8);
+  --destructive: var(--mag-4);
+  --border: var(--charcoal-2);
+  --input: var(--charcoal-2);
+  --ring: var(--genie-4);
+
+  /* ---------- Type ---------- */
+  --font-sf-pro:
+    "SF Pro Display", "SF Pro Text", ui-sans-serif, system-ui, -apple-system,
+    "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+  --font-inter: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-sf-pro);
+
+  /* Tailwind text-* size ramp + the project's xxs */
+  --text-xxs: 0.625rem;   /* 10px */
+  --text-xs: 0.75rem;     /* 12px */
+  --text-sm: 0.875rem;    /* 14px */
+  --text-base: 1rem;      /* 16px */
+  --text-lg: 1.125rem;    /* 18px */
+  --text-xl: 1.25rem;     /* 20px */
+  --text-2xl: 1.5rem;     /* 24px */
+  --text-3xl: 1.875rem;   /* 30px */
+  --text-4xl: 2.25rem;    /* 36px */
+
+  /* Weights actually used in product (light/normal/medium/semibold) */
+  --weight-light: 300;
+  --weight-normal: 400;
+  --weight-medium: 500;
+  --weight-semibold: 600;
+
+  /* ---------- Radii ---------- */
+  --radius-sm: 0.25rem;   /* 4px  — chips, kbd */
+  --radius-md: 0.375rem;  /* 6px  — small buttons, inputs */
+  --radius-lg: 0.5rem;    /* 8px  — buttons, toolbar */
+  --radius-xl: 0.75rem;   /* 12px — prompt input, message bubble */
+  --radius-2xl: 1rem;     /* 16px — side panel */
+  --radius-full: 9999px;  /* nav buttons, popover triggers */
+
+  /* ---------- Shadows (canonical 3, all very soft) ---------- */
+  --shadow-card: -1px 4px 8px 0 rgba(0, 0, 0, 0.08);
+  --shadow-button: 0 1px 2px 1px rgba(0, 0, 0, 0.04);
+  --shadow-attachment: 0 2px 4px rgba(0, 0, 0, 0.08);
+
+  /* ---------- Spacing (Tailwind default 4px base — these are the rungs used) ---------- */
+  --space-1: 0.25rem;
+  --space-1-5: 0.375rem;
+  --space-2: 0.5rem;
+  --space-2-5: 0.625rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.25rem;
+  --space-6: 1.5rem;
+  --space-7: 1.75rem;
+  --space-8: 2rem;
+  --space-10: 2.5rem;
+}
+
+/* ============================================================
+   Semantic typography — rough mapping of the product's hierarchy.
+   The web app uses utility classes, but these named recipes
+   capture the *intent* observed across pages.
+   ============================================================ */
+
+html, body {
+  font-family: var(--font-sans);
+  color: var(--foreground);
+  background: var(--background);
+  -webkit-font-smoothing: antialiased;
+}
+
+.t-display {
+  font-family: var(--font-sans);
+  font-size: 2.25rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  color: var(--charcoal-8);
+}
+
+.t-h1 {
+  font-family: var(--font-sans);
+  font-size: 1.5rem;
+  font-weight: 600;
+  line-height: 1.25;
+  color: var(--charcoal-8);
+}
+
+.t-h2 {
+  font-family: var(--font-sans);
+  font-size: 1.25rem;
+  font-weight: 600;
+  line-height: 1.3;
+  color: var(--charcoal-8);
+}
+
+.t-h3 {
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--charcoal-8);
+}
+
+.t-body {
+  font-family: var(--font-sans);
+  font-size: 0.875rem;
+  font-weight: 400;
+  line-height: 1.5;
+  color: var(--charcoal-8);
+}
+
+.t-body-muted {
+  font-family: var(--font-sans);
+  font-size: 0.875rem;
+  font-weight: 400;
+  color: var(--charcoal-4);
+}
+
+.t-caption {
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  font-weight: 400;
+  color: var(--charcoal-4);
+}
+
+.t-label {
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--charcoal-6);
+  letter-spacing: 0.01em;
+}
+
+.t-mono {
+  font-family: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, monospace;
+  font-size: 0.8125rem;
+}
+
+/* "Genie thinking" shimmer — used for streaming/AI thinking states */
+.t-thinking {
+  font-family: var(--font-inter);
+  font-size: 1rem;
+  font-weight: 300;
+  background: linear-gradient(
+    in oklab 90deg,
+    var(--genie-4) 0%,
+    var(--genie-4) 45%,
+    oklch(from var(--mag-4) l c h / 0.75) 50%,
+    var(--genie-4) 55%,
+    var(--genie-4) 100%
+  );
+  background-size: 300% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: text-shimmer 3s linear infinite;
+}
+
+@keyframes text-shimmer {
+  0% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}

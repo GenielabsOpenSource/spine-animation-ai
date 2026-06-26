@@ -1,0 +1,28 @@
+# ── Python ──────────────────────────────────────────────
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/
+
+# ── Node / Vite ─────────────────────────────────────────
+node_modules/
+dist/
+.vite/
+*.tsbuildinfo
+
+# ── Editor / OS ─────────────────────────────────────────
+.idea/
+.vscode/
+.DS_Store
+
+# ── Local config / secrets (never commit real keys) ─────
+# reskin-app reads keys from app/.env or ~/.genie-reskin/secrets.json
+.env
+.env.*
+!.env.example
+
+# ── Agent / per-project working files ───────────────────
+.claude/
+.genie/
+sessions/

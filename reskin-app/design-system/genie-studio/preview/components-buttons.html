@@ -1,0 +1,31 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><link rel="stylesheet" href="_card.css">
+<style>
+  .btn { display:inline-flex; align-items:center; justify-content:center; height:32px; min-width:100px; padding:0 16px; border-radius:8px; font-size:14px; font-weight:500; font-family: var(--font-sans); border:0; cursor:pointer; transition: all 150ms; }
+  .btn-default { background:#142938; color:#fff; }
+  .btn-default:hover { background:#17425f; }
+  .btn-cta { background: rgba(69,179,253,0.9); color:#f7fcff; border-radius:6px; }
+  .btn-secondary { background: rgba(255,255,255,0.5); color:#222120; border:1px solid #aaa9a7; box-shadow: 0 1px 2px 1px rgba(0,0,0,0.04); }
+  .btn-outline { background:#fff; color:#373634; border:1px solid #b9b7b6; border-radius:6px; box-shadow: 0 1px 2px 1px rgba(0,0,0,0.04); }
+  .btn-outlinePrimary { background:#fff; color:#2b7cb2; border:1px solid #45b3fd; border-radius:6px; box-shadow: 0 1px 2px 1px rgba(0,0,0,0.04); }
+  .btn-destructive { background: rgba(186,73,64,0.9); color:#f9f9f9; padding:0 20px; }
+  .btn-nav { background: rgba(255,255,255,0.5); color:#4b4a48; border:1px solid #b9b7b6; border-radius:9999px; padding:0 12px; box-shadow: 0 1px 2px 1px rgba(0,0,0,0.04); backdrop-filter: blur(4px); }
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="label">BUTTONS — variants from CVA</div>
+  <div class="row">
+    <button class="btn btn-default">+ New board</button>
+    <button class="btn btn-cta">Try it</button>
+    <button class="btn btn-secondary">Cancel</button>
+    <button class="btn btn-outline">Edit</button>
+  </div>
+  <div class="row">
+    <button class="btn btn-outlinePrimary">Share</button>
+    <button class="btn btn-destructive">Delete</button>
+    <button class="btn btn-nav">Boards</button>
+  </div>
+  <div class="mono">default · cta · secondary · outline · outlinePrimary · destructive · nav</div>
+</div>
+</body></html>

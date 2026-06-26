@@ -21,6 +21,19 @@
 
 ---
 
+## ✨ New: Reskin Studio
+
+**Restyle any rigged Spine character with a single sentence.** Open a Spine project, describe the look you want — *"emerald and silver royal robes"* — and Reskin Studio repaints the whole character with Gemini, slices the result back into clean per-slot textures, and drops the new skin straight onto the live rig. Retouch any part, refine masks, then export back to Spine. No redraw, no re-rig.
+
+<!-- TODO: drop the reskin demo gif at demo/reskin.gif -->
+<p align="center">
+  <img src="demo/reskin.gif" alt="Reskin Studio demo" width="50%"/>
+</p>
+
+<p align="center">
+  <a href="reskin-app/"><strong>→ Explore Reskin Studio</strong></a>
+</p>
+
 ---
 
 <div align="center">

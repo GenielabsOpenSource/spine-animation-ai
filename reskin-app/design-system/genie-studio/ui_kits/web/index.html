@@ -1,0 +1,326 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Genie Studio — Web UI Kit</title>
+<link rel="stylesheet" href="../../colors_and_type.css">
+<style>
+  :root {
+    --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Segoe UI", Helvetica, Arial, sans-serif;
+    --canvas: #f3f4f5;
+    --background: var(--charcoal-0);
+    --foreground: var(--charcoal-8);
+    --muted-fg: var(--charcoal-4);
+    --border: var(--charcoal-2);
+    --border-strong: var(--charcoal-2-5);
+    --primary: var(--genie-4);
+    --shadow-card: -1px 4px 8px 0 rgba(0,0,0,0.08);
+    --shadow-button: 0 1px 2px 1px rgba(0,0,0,0.04);
+    --shadow-attachment: 0 2px 4px rgba(0,0,0,0.08);
+  }
+  * { box-sizing: border-box; }
+  html, body { margin:0; padding:0; }
+  body {
+    font-family: var(--font-sans);
+    background: var(--charcoal-1);
+    color: var(--foreground);
+    font-size: 14px;
+    line-height: 1.5;
+  }
+  .frame-stack { display:flex; flex-direction:column; gap:48px; padding: 40px; max-width: 1440px; margin: 0 auto; }
+  .frame-label { font-size: 12px; font-weight: 500; color: var(--charcoal-4); letter-spacing:.02em; padding-left: 4px; }
+  .frame { background: white; border-radius: 16px; box-shadow: var(--shadow-card); overflow: hidden; border: 1px solid var(--border); }
+
+  /* ---------- Boards page ---------- */
+  .boards { background: var(--charcoal-1); padding: 40px 48px 56px; min-height: 720px; }
+  .boards-head { display:flex; justify-content:space-between; align-items:flex-end; margin-bottom: 32px; }
+  .boards h1 { margin:0; font-size: 24px; font-weight:600; letter-spacing:-0.01em; }
+  .boards-sub { margin: 4px 0 0; color: var(--muted-fg); font-size: 14px; }
+  .boards-grid { display:grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+  .bcard { background: white; border:1px solid var(--border); border-radius: 8px; box-shadow: var(--shadow-button); overflow:hidden; transition: all 150ms; cursor:pointer; }
+  .bcard:hover { box-shadow: 0 4px 8px rgba(0,0,0,0.08); border-color: var(--border-strong); }
+  .bthumb { aspect-ratio: 4/3; background: linear-gradient(to bottom right, var(--charcoal-1), var(--charcoal-2)); display:flex; align-items:center; justify-content:center; color: var(--charcoal-3); font-size:12px; }
+  .bmeta { padding: 12px; }
+  .btitle { margin:0; font-size:14px; font-weight:500; }
+  .btime { margin: 2px 0 0; font-size:12px; color: var(--muted-fg); }
+  .bcard.empty { background: transparent; border: 1px dashed var(--border); box-shadow: none; display:flex; align-items:center; justify-content:center; color: var(--muted-fg); font-size: 14px; aspect-ratio: 4/3; }
+  .btn { display:inline-flex; align-items:center; justify-content:center; height:32px; padding:0 16px; border-radius:8px; font-size:14px; font-weight:500; font-family: inherit; border:0; cursor:pointer; transition:all 150ms; }
+  .btn-primary { background: var(--charcoal-7); color: white; }
+  .btn-primary:hover { background: var(--charcoal-6); }
+
+  /* ---------- Canvas page ---------- */
+  .canvas-page { position: relative; height: 720px; background: var(--canvas); overflow: hidden; }
+
+  /* fake canvas content */
+  .canvas-frames { position:absolute; inset:0; padding: 80px; }
+  .cframe { position:absolute; border-radius: 4px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); overflow:hidden; border: 1px solid rgba(0,0,0,0.04); }
+  .cframe .clabel { position:absolute; top:-22px; left:0; font-size:11px; color: var(--charcoal-5); }
+  .cframe.f1 { left:120px; top:80px; width:340px; height:240px; background:#f6cab4; }
+  .cframe.f2 { left:520px; top:80px; width:280px; height:380px; background:#fbe99d; }
+  .cframe.f3 { left:120px; top:380px; width:340px; height:200px; background:#b0dfff; }
+  .cframe.f4 { left:860px; top:200px; width:200px; height:200px; background:#e1fdb8; }
+
+  /* canvas chrome — top-left hamburger + board name */
+  .canvas-tl { position:absolute; top: 28px; left: 28px; display:flex; gap:8px; align-items:center; }
+  .ham {
+    width: 36px; height: 36px; border-radius: 9999px;
+    background: rgba(255,255,255,0.95); backdrop-filter: blur(4px);
+    border: 1px solid var(--border-strong); box-shadow: var(--shadow-card);
+    display:flex; align-items:center; justify-content:center;
+  }
+  .board-name {
+    height: 36px; padding: 0 16px; border-radius: 9999px;
+    background: rgba(255,255,255,0.95); backdrop-filter: blur(4px);
+    border: 1px solid var(--border-strong); box-shadow: var(--shadow-card);
+    display:flex; align-items:center; font-size: 14px; font-weight: 500;
+  }
+
+  /* canvas toolbar — left edge, vertical */
+  .canvas-toolbar {
+    position:absolute; top: 50%; left: 28px; transform: translateY(-50%);
+    display:flex; flex-direction:column; gap:4px; padding: 4px;
+    background: rgba(255,255,255,0.95); backdrop-filter: blur(4px);
+    border: 1px solid var(--border-strong); border-radius: 8px;
+    box-shadow: var(--shadow-card);
+  }
+  .tbtn {
+    width: 36px; height: 36px; border-radius: 8px;
+    display:flex; align-items:center; justify-content:center; cursor:pointer;
+    color: var(--charcoal-8); transition: all 150ms;
+  }
+  .tbtn:hover { background: var(--highlight-2); }
+  .tbtn.active { background: var(--highlight-4); }
+  .tbtn img { width: 20px; height: 20px; }
+  .sep { height:1px; background: var(--border); margin: 4px 0; }
+
+  /* zoom pill bottom-right */
+  .zoom-pill {
+    position:absolute; bottom: 28px; left: 28px;
+    display:flex; align-items:center; gap: 4px;
+    background: rgba(255,255,255,0.95); backdrop-filter: blur(4px);
+    border: 1px solid var(--border-strong); border-radius: 9999px;
+    box-shadow: var(--shadow-card); padding: 4px 6px;
+    font-size: 12px; color: var(--charcoal-6);
+  }
+  .zbtn { width: 24px; height: 24px; border-radius: 9999px; display:flex; align-items:center; justify-content:center; cursor:pointer; }
+  .zbtn:hover { background: var(--highlight-2); }
+
+  /* ---------- Side panel (chat) ---------- */
+  .side-panel {
+    position:absolute; top: 0; right: 0; height: 100%;
+    width: 400px; padding: 24px;
+  }
+  .panel-inner {
+    height: 100%; background: rgba(255,255,255,0.92); backdrop-filter: blur(8px);
+    border: 1px solid var(--border); border-radius: 16px;
+    box-shadow: var(--shadow-card);
+    display:flex; flex-direction:column;
+  }
+  .panel-head { display:flex; justify-content:space-between; align-items:center; padding: 12px 12px 12px 16px; border-bottom: 1px solid var(--border); }
+  .tabs { display:flex; gap:4px; }
+  .tab { font-size:14px; padding:4px 10px; border-radius:6px; color: var(--charcoal-6); }
+  .tab.on { background: rgba(170,169,167,0.30); font-weight: 600; color: var(--charcoal-8); border:1px solid rgba(170,169,167,0.50); }
+  .tab.off { opacity:0.5; cursor:not-allowed; }
+  .share { font-size:13px; padding:4px 12px; border:1px solid var(--genie-4); color: var(--genie-5); border-radius:6px; background:white; cursor:pointer; }
+
+  .conv { flex:1; padding: 16px; display:flex; flex-direction:column; gap:12px; overflow:hidden; }
+  .msg-user { align-self:flex-end; background: rgba(227,227,227,0.55); border-radius: 12px 12px 4px 12px; padding: 8px 12px; max-width: 80%; font-size:14px; }
+  .msg-asst { align-self:flex-start; max-width: 90%; font-size: 14px; }
+  .attach-row { display:flex; gap:8px; align-self:flex-end; max-width: 80%; }
+  .attach {
+    width: 56px; height: 56px; border-radius: 6px; background: var(--charcoal-1); border:1px solid var(--border);
+    box-shadow: var(--shadow-attachment); display:flex; align-items:center; justify-content:center; font-size: 10px; color: var(--charcoal-4);
+    overflow:hidden;
+  }
+  .attach.peach { background:#f6cab4; }
+  .shimmer {
+    font-size: 14px; font-weight: 300;
+    background: linear-gradient(in oklab 90deg, var(--genie-4) 0%, var(--genie-4) 45%, oklch(from var(--mag-4) l c h / 0.75) 50%, var(--genie-4) 55%, var(--genie-4) 100%);
+    background-size: 300% 100%;
+    -webkit-background-clip: text; background-clip:text;
+    -webkit-text-fill-color: transparent;
+    animation: text-shimmer 3s linear infinite;
+  }
+  @keyframes text-shimmer { 0%{background-position:100% 50%} 100%{background-position:0% 50%} }
+
+  /* prompt input */
+  .composer { padding: 12px 16px 16px; }
+  .input-group { border:1px solid var(--border-strong); border-radius:12px; background:white; }
+  .input-group:focus-within { border-color: var(--charcoal-5); box-shadow: var(--shadow-card); }
+  .input-group textarea { display:block; width:100%; padding:10px 12px; border:0; outline:0; resize:none; font-family:inherit; font-size:14px; color: var(--charcoal-8); background:transparent; min-height: 44px; }
+  .input-group textarea::placeholder { color: var(--charcoal-3); }
+  .addon { display:flex; align-items:center; justify-content:space-between; padding: 0 8px 8px; gap: 8px; }
+  .addon-left { display:flex; gap: 4px; }
+  .icon-btn { width: 32px; height:32px; border-radius:6px; border:1px solid var(--border-strong); background:white; display:flex; align-items:center; justify-content:center; box-shadow: var(--shadow-button); cursor:pointer; }
+  .icon-btn img { width: 14px; height: 14px; }
+  .send {
+    width: 32px; height: 32px; border-radius:8px;
+    background: var(--charcoal-7); color: white;
+    display:flex; align-items:center; justify-content:center; cursor:pointer;
+  }
+  .send img { width: 14px; height: 14px; filter: invert(1); }
+
+  /* creation image w/ hover toolbar */
+  .creation-toolbar {
+    position: absolute; top: -44px; left: 50%; transform: translateX(-50%);
+    display:flex; gap: 4px; padding: 4px;
+    background: rgba(255,255,255,0.95); backdrop-filter: blur(4px);
+    border: 1px solid var(--border-strong); border-radius: 8px;
+    box-shadow: var(--shadow-card);
+  }
+  .cbtn { width: 32px; height: 32px; border-radius: 6px; display:flex; align-items:center; justify-content:center; cursor:pointer; }
+  .cbtn:hover { background: var(--highlight-2); }
+  .cbtn img { width: 18px; height: 18px; }
+
+  /* ---------- Page meta header ---------- */
+  .kit-head { padding: 56px 48px 8px; max-width: 1440px; margin: 0 auto; }
+  .kit-head h1 { margin: 0; font-size: 32px; font-weight: 600; letter-spacing: -0.02em; }
+  .kit-head p { margin: 6px 0 0; color: var(--muted-fg); font-size: 15px; max-width: 60ch; }
+</style>
+</head>
+<body>
+
+<div class="kit-head">
+  <h1>Genie Studio — Web UI Kit</h1>
+  <p>Three primary surfaces composed from the system: the Boards index, the Canvas with floating chrome, and the Genie chat panel. Built only from tokens and components defined in the design system.</p>
+</div>
+
+<div class="frame-stack">
+
+  <!-- Boards page -->
+  <div>
+    <div class="frame-label">/boards — workspace index</div>
+    <div class="frame">
+      <div class="boards">
+        <div class="boards-head">
+          <div>
+            <h1>Boards</h1>
+            <p class="boards-sub">Your canvas workspaces</p>
+          </div>
+          <button class="btn btn-primary">+ New board</button>
+        </div>
+        <div class="boards-grid">
+          <div class="bcard">
+            <div class="bthumb" style="background:#f6cab4"></div>
+            <div class="bmeta"><h3 class="btitle">Stardust Crunch — cereal</h3><p class="btime">Edited 14 hours ago</p></div>
+          </div>
+          <div class="bcard">
+            <div class="bthumb" style="background:#fbe99d"></div>
+            <div class="bmeta"><h3 class="btitle">Holiday card concepts</h3><p class="btime">Edited 2 days ago</p></div>
+          </div>
+          <div class="bcard">
+            <div class="bthumb" style="background:#b0dfff"></div>
+            <div class="bmeta"><h3 class="btitle">Brand exploration</h3><p class="btime">Edited 3 days ago</p></div>
+          </div>
+          <div class="bcard">
+            <div class="bthumb">No preview</div>
+            <div class="bmeta"><h3 class="btitle">Untitled board</h3><p class="btime">Edited 5 days ago</p></div>
+          </div>
+          <div class="bcard">
+            <div class="bthumb" style="background:#e1fdb8"></div>
+            <div class="bmeta"><h3 class="btitle">Album cover sketch</h3><p class="btime">Edited a week ago</p></div>
+          </div>
+          <div class="bcard">
+            <div class="bthumb" style="background:#f7d2f3"></div>
+            <div class="bmeta"><h3 class="btitle">Mascot ideas</h3><p class="btime">Edited 12 days ago</p></div>
+          </div>
+          <div class="bcard">
+            <div class="bthumb" style="background:#f2ede7"></div>
+            <div class="bmeta"><h3 class="btitle">Editorial shoot</h3><p class="btime">Edited 3 weeks ago</p></div>
+          </div>
+          <div class="bcard empty">+ New board</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Canvas page -->
+  <div>
+    <div class="frame-label">/board/:id — canvas + chrome + chat</div>
+    <div class="frame">
+      <div class="canvas-page">
+
+        <!-- canvas content (frames) -->
+        <div class="canvas-frames">
+          <div class="cframe f1"><div class="clabel">Front panel</div></div>
+          <div class="cframe f2">
+            <div class="clabel">Hero shot</div>
+            <!-- creation-image hover toolbar -->
+            <div class="creation-toolbar">
+              <div class="cbtn"><img src="../../assets/icons/creation-image-edit.svg"></div>
+              <div class="cbtn"><img src="../../assets/icons/creation-image-resize.svg"></div>
+              <div class="cbtn"><img src="../../assets/icons/creation-image-remove-bg.svg"></div>
+              <div class="cbtn"><img src="../../assets/icons/creation-image-split-layers.svg"></div>
+              <div class="cbtn"><img src="../../assets/icons/creation-image-download.svg"></div>
+            </div>
+          </div>
+          <div class="cframe f3"><div class="clabel">Side panel</div></div>
+          <div class="cframe f4"><div class="clabel">Mascot</div></div>
+        </div>
+
+        <!-- top-left chrome -->
+        <div class="canvas-tl">
+          <div class="ham"><img src="../../assets/icons/hamburger.svg" width="18" height="18"></div>
+          <div class="board-name">Stardust Crunch — cereal</div>
+        </div>
+
+        <!-- left toolbar -->
+        <div class="canvas-toolbar">
+          <div class="tbtn active"><img src="../../assets/icons/cursor.svg"></div>
+          <div class="tbtn"><img src="../../assets/icons/hand.svg"></div>
+          <div class="tbtn"><img src="../../assets/icons/frame.svg"></div>
+          <div class="tbtn"><img src="../../assets/icons/text.svg"></div>
+          <div class="sep"></div>
+          <div class="tbtn"><img src="../../assets/icons/add.svg"></div>
+        </div>
+
+        <!-- zoom pill -->
+        <div class="zoom-pill">
+          <div class="zbtn">−</div>
+          <span style="min-width: 36px; text-align:center;">100%</span>
+          <div class="zbtn">+</div>
+        </div>
+
+        <!-- side panel -->
+        <div class="side-panel">
+          <div class="panel-inner">
+            <div class="panel-head">
+              <div class="tabs">
+                <div class="tab on">Genie</div>
+                <div class="tab off">Asset Library</div>
+                <div class="tab off">Image History</div>
+              </div>
+              <button class="share">Share</button>
+            </div>
+            <div class="conv">
+              <div class="msg-user">A cereal box for "Stardust Crunch" — purple sky, cosmic vibes, kid-friendly mascot</div>
+              <div class="msg-asst">Here's a first pass on the front panel. Happy to iterate on the type or the mascot.</div>
+              <div class="attach-row">
+                <div class="attach peach"></div>
+                <div class="attach" style="background:#fbe99d"></div>
+              </div>
+              <div class="msg-user">Make the mascot bigger and shift the wordmark up</div>
+              <div class="shimmer">Imagining color palettes…</div>
+            </div>
+            <div class="composer">
+              <div class="input-group">
+                <textarea placeholder="Describe what you'd like to create"></textarea>
+                <div class="addon">
+                  <div class="addon-left">
+                    <div class="icon-btn"><img src="../../assets/icons/attachment.svg"></div>
+                    <div class="icon-btn"><img src="../../assets/icons/layout.svg"></div>
+                  </div>
+                  <div class="send"><img src="../../assets/icons/send.svg"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>

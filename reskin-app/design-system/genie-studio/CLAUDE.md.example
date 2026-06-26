@@ -1,0 +1,20 @@
+# Design system
+
+This project uses the **Genie Studio** design system, located at `design-system/genie-studio/`.
+
+## Rules
+
+- Every visual must follow this system. Don't invent colors, type, spacing, or components not grounded here.
+- Tokens live in `design-system/genie-studio/colors_and_type.css`. Import it from your global stylesheet so all `--charcoal-*`, `--genie-*`, `--bgs-*`, `--shadow-*`, `--radius-*` variables are available.
+- Icons are in `design-system/genie-studio/assets/icons/` — 24×24 stroke SVGs at 1.5px stroke. Use these before reaching for a third-party icon library. Fall back to Lucide at the same visual weight if needed.
+- Brand mark: `design-system/genie-studio/assets/genie-icon.svg`. Don't recolor it outside the genie-* scale.
+
+## Reference
+
+- `design-system/genie-studio/README.md` — full system guide (voice, color, type, spacing, components, iconography).
+- `design-system/genie-studio/ui_kits/web/index.html` — composed reference surfaces (Boards, Canvas, Chat panel) showing how the tokens come together.
+- `design-system/genie-studio/preview/` — per-token review cards (color scales, type ramps, buttons, prompt input, side panel, etc).
+
+## Voice
+
+Calm, plain, second-person, sentence case, no emoji, no exclamation marks. See README → CONTENT FUNDAMENTALS.

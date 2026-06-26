@@ -1,0 +1,21 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><link rel="stylesheet" href="_card.css">
+<style>
+  .tabs { display:inline-flex; gap:4px; padding: 0; height:32px; }
+  .tab { display:flex; align-items:center; padding: 0 12px; border-radius:6px; font-size:14px; color:#373634; cursor:pointer; border:1px solid transparent; }
+  .tab:hover { background: rgba(170,169,167,0.15); color:#101010; }
+  .tab.active { background: rgba(170,169,167,0.30); border-color: rgba(170,169,167,0.50); font-weight:600; color:#101010; box-shadow: 0 1px 2px rgba(0,0,0,0.04); }
+  .tab.disabled { opacity:0.5; pointer-events:none; }
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="label">TABS — side panel header</div>
+  <div class="tabs">
+    <div class="tab active">Genie</div>
+    <div class="tab disabled">Asset Library</div>
+    <div class="tab disabled">Image History</div>
+  </div>
+  <div class="mono">default variant · pill bg on active · disabled = 0.5 opacity</div>
+</div>
+</body></html>

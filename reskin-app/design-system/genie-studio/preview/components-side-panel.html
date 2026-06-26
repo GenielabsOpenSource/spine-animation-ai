@@ -1,0 +1,24 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><link rel="stylesheet" href="_card.css">
+<style>
+  .panel { width: 380px; height: 240px; border-radius: 16px; border:1px solid #e3e3e3; background: rgba(255,255,255,0.9); backdrop-filter: blur(4px); box-shadow: -1px 4px 8px 0 rgba(0,0,0,0.08); padding: 16px; box-sizing:border-box; display:flex; flex-direction:column; gap:12px; }
+  .head { display:flex; justify-content:space-between; align-items:center; }
+  .tabs { display:flex; gap:4px; }
+  .tab { font-size:13px; padding:4px 10px; border-radius:6px; color:#373634; }
+  .tab.on { background: rgba(170,169,167,0.30); font-weight:600; color:#101010; }
+  .tab.off { opacity:0.5; }
+  .share { font-size:13px; padding:4px 12px; border:1px solid #45b3fd; color:#2b7cb2; border-radius:6px; opacity:0.5; }
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="label">SIDE PANEL — floating chrome over canvas</div>
+  <div class="panel">
+    <div class="head">
+      <div class="tabs"><div class="tab on">Genie</div><div class="tab off">Asset Library</div><div class="tab off">Image History</div></div>
+      <div class="share">Share</div>
+    </div>
+    <div style="font-size:13px;color:#787673">Translucent white · 16px radius · backdrop blur · shadow-card</div>
+  </div>
+</div>
+</body></html>

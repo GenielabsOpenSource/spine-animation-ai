@@ -1,0 +1,30 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><link rel="stylesheet" href="_card.css">
+<style>
+  .stack { display:flex; flex-direction:column; gap:10px; }
+  .row3 { display:flex; align-items:center; gap:14px; }
+  .pill { padding: 4px 10px; border-radius: 999px; background: #f3f4f5; font-family: ui-monospace, monospace; font-size: 11px; color: #373634; }
+  .demo { background: #f9fafa; border: 1px solid #e3e3e3; }
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="label">RADII — 4 / 6 / 8 / 12 / 16 / full</div>
+  <div class="row3">
+    <div class="demo" style="width:48px;height:36px;border-radius:4px"></div>
+    <div class="demo" style="width:48px;height:36px;border-radius:6px"></div>
+    <div class="demo" style="width:48px;height:36px;border-radius:8px"></div>
+    <div class="demo" style="width:48px;height:36px;border-radius:12px"></div>
+    <div class="demo" style="width:48px;height:36px;border-radius:16px"></div>
+    <div class="demo" style="width:48px;height:36px;border-radius:9999px"></div>
+  </div>
+  <div class="row3">
+    <div class="pill">sm 4 — chip</div>
+    <div class="pill">md 6 — input</div>
+    <div class="pill">lg 8 — button</div>
+    <div class="pill">xl 12 — composer</div>
+    <div class="pill">2xl 16 — panel</div>
+    <div class="pill">full — pill</div>
+  </div>
+</div>
+</body></html>

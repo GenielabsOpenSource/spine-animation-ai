@@ -1,0 +1,27 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><link rel="stylesheet" href="_card.css">
+<style>
+  .input-group { width: 360px; border:1px solid #b9b7b6; border-radius:12px; background:#fff; overflow:hidden; }
+  .input-group:focus-within { border-color:#4b4a48; box-shadow: -1px 4px 8px 0 rgba(0,0,0,0.08); }
+  .input-group textarea { display:block; width:100%; min-height:48px; padding:10px; border:0; outline:0; resize:none; font-family: var(--font-sans); font-size:14px; }
+  .input-group textarea::placeholder { color:#aaa9a7; }
+  .addon { display:flex; align-items:center; justify-content:space-between; padding: 0 16px 12px; gap:8px; }
+  .icon-btn { width:32px; height:32px; border-radius:6px; border:1px solid #b9b7b6; background:#fff; display:flex; align-items:center; justify-content:center; box-shadow: 0 1px 2px 1px rgba(0,0,0,0.04); cursor:pointer; }
+  .send { width:32px; height:32px; border-radius:8px; background:#142938; color:#fff; display:flex; align-items:center; justify-content:center; }
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="label">PROMPT INPUT — chat composer</div>
+  <div class="input-group">
+    <textarea placeholder="Describe what you'd like to create"></textarea>
+    <div class="addon">
+      <div class="row" style="gap:4px">
+        <div class="icon-btn"><img src="../assets/icons/attachment.svg" width="14" height="14" alt=""></div>
+        <div class="icon-btn"><img src="../assets/icons/layout.svg" width="14" height="14" alt=""></div>
+      </div>
+      <div class="send"><img src="../assets/icons/send.svg" width="14" height="14" style="filter:invert(1)" alt=""></div>
+    </div>
+  </div>
+</div>
+</body></html>

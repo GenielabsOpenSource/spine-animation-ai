@@ -1,0 +1,27 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><link rel="stylesheet" href="_card.css">
+<style>
+  .msg-user { align-self:flex-end; background: rgba(227,227,227,0.5); border-radius: 12px 12px 4px 12px; padding: 10px 14px; max-width: 80%; font-size:14px; color:#101010; }
+  .msg-asst { align-self:flex-start; max-width:90%; font-size:14px; color:#101010; }
+  .stack { display:flex; flex-direction:column; gap:10px; }
+  .shimmer {
+    font-family: "Inter", sans-serif; font-size: 14px; font-weight: 300;
+    background: linear-gradient(in oklab 90deg, #45b3fd 0%, #45b3fd 45%, oklch(from #ff1c74 l c h / 0.75) 50%, #45b3fd 55%, #45b3fd 100%);
+    background-size: 300% 100%;
+    -webkit-background-clip: text; background-clip:text;
+    -webkit-text-fill-color: transparent;
+    animation: text-shimmer 3s linear infinite;
+  }
+  @keyframes text-shimmer { 0%{background-position:100% 50%} 100%{background-position:0% 50%} }
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="label">MESSAGES — chat bubbles + thinking</div>
+  <div class="stack">
+    <div class="msg-user">A cereal box for "Stardust Crunch" — purple sky, cosmic vibes</div>
+    <div class="msg-asst">Here's a first pass on the front panel — happy to iterate on the type or character.</div>
+    <div class="shimmer">Imagining color palettes…</div>
+  </div>
+</div>
+</body></html>

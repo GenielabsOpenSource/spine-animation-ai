@@ -1,0 +1,27 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><link rel="stylesheet" href="_card.css">
+<style>
+  .scale { display:flex; align-items:flex-end; gap:8px; }
+  .rung { display:flex; flex-direction:column; align-items:center; gap:6px; }
+  .bar { background: #45b3fd; width: 24px; border-radius: 2px; }
+  .lab { font-size: 10px; color: #4b4a48; font-family: ui-monospace, monospace; }
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="label">SPACING — 4px base, common rungs (px)</div>
+  <div class="scale">
+    <div class="rung"><div class="bar" style="height:4px"></div><div class="lab">4</div></div>
+    <div class="rung"><div class="bar" style="height:6px"></div><div class="lab">6</div></div>
+    <div class="rung"><div class="bar" style="height:8px"></div><div class="lab">8</div></div>
+    <div class="rung"><div class="bar" style="height:12px"></div><div class="lab">12</div></div>
+    <div class="rung"><div class="bar" style="height:16px"></div><div class="lab">16</div></div>
+    <div class="rung"><div class="bar" style="height:20px"></div><div class="lab">20</div></div>
+    <div class="rung"><div class="bar" style="height:24px"></div><div class="lab">24</div></div>
+    <div class="rung"><div class="bar" style="height:28px"></div><div class="lab">28</div></div>
+    <div class="rung"><div class="bar" style="height:32px"></div><div class="lab">32</div></div>
+    <div class="rung"><div class="bar" style="height:40px"></div><div class="lab">40</div></div>
+  </div>
+  <div class="mono">no margins for layout — padding + flex/grid + gap only</div>
+</div>
+</body></html>
