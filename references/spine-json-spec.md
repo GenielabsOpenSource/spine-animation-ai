@@ -39,16 +39,46 @@ Defaults: x=0, y=0, rotation=0, scaleX=1, scaleY=1, length=0
 "animations": { "idle": { "bones": {
   "torso": {
     "rotate": [
-      { "time": 0, "angle": 0 },
-      { "time": 0.75, "angle": 2, "curve": [0.25, 0, 0.75, 1] }
+      { "time": 0, "value": 0, "curve": [0.19, 0, 0.56, 2] },
+      { "time": 0.75, "value": 2 }
+    ],
+    "translate": [
+      { "time": 0, "x": 0, "y": 0, "curve": [0.19, 0, 0.56, 0, 0.19, 0, 0.56, 3] },
+      { "time": 0.75, "x": 0, "y": 3 }
     ]
   }
 }}}
 ```
 
+Rotation values are keyed as `value`. (`angle` is the Spine 3.8 spelling; a
+4.x runtime reads it as 0 and nothing turns.)
+
 ### Curve types
-- Omitted = linear | `"stepped"` = hold | `[cx1, cy1, cx2, cy2]` = bezier
-- Common: ease `[0.25, 0, 0.75, 1]`, in `[0.42, 0, 1, 1]`, out `[0, 0, 0.58, 1]`
+- Omitted = linear | `"stepped"` = hold | array of numbers = bezier
+- A keyframe's curve describes the segment that **starts** at it. The last
+  keyframe of a timeline therefore never carries one.
+
+### Bezier control points
+Two rules trip people up when writing 4.x JSON by hand:
+
+**One bezier per animated property, not per keyframe.** `rotate` drives a
+single property and takes 4 numbers. `translate`, `scale` and `shear` drive
+two (x then y) and take 8. Supplying 4 where 8 are needed makes the runtime
+read past the end of the array; the resulting NaN propagates through the bone
+transforms and the skeleton stops rendering after the first frame.
+
+**Control points are absolute, not normalized.** `cx` is a time and `cy` is a
+value, in the same units as the surrounding keyframes -- not a 0..1 fraction
+of the segment. To place a standard ease on a segment running from
+`(t1, v1)` to `(t2, v2)`:
+
+```
+cx1 = t1 + (t2 - t1) * 0.25    cy1 = v1 + (v2 - v1) * 0
+cx2 = t1 + (t2 - t1) * 0.75    cy2 = v1 + (v2 - v1) * 1
+```
+
+Normalized fractions from the 3.8-era format put the handles outside their
+own segment, which makes the motion lurch rather than ease.
 
 ## Atlas File Format
 ```

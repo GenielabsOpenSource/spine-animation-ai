@@ -53,7 +53,13 @@ def _has(bone_names, *names):
     return any(n in bone_names for n in names)
 
 def _kf(time, angle=None, x=None, y=None, curve=EASE):
-    """Build a keyframe dict, omitting None values."""
+    """Build a keyframe dict, omitting None values.
+
+    This is the authoring shorthand used by the generators below: rotations go
+    under "angle", and `curve` is a single normalized bezier describing the
+    segment that ends at this keyframe. `_to_spine_42` rewrites both into the
+    wire format before the skeleton is serialized.
+    """
     kf = {"time": round(time, 4)}
     if angle is not None:
         kf["angle"] = round(angle, 2)
@@ -64,6 +70,95 @@ def _kf(time, angle=None, x=None, y=None, curve=EASE):
     if curve:
         kf["curve"] = curve
     return kf
+
+
+# ─── Spine 4.2 wire format ──────────────────────────────────────────────────
+
+# Timeline type -> the properties it animates, with their default values.
+_TIMELINE_PROPERTIES = {
+    "rotate": (("value", 0.0),),
+    "translate": (("x", 0.0), ("y", 0.0)),
+    "scale": (("x", 1.0), ("y", 1.0)),
+    "shear": (("x", 0.0), ("y", 0.0)),
+    "translatex": (("value", 0.0),),
+    "translatey": (("value", 0.0),),
+    "scalex": (("value", 1.0),),
+    "scaley": (("value", 1.0),),
+    "shearx": (("value", 0.0),),
+    "sheary": (("value", 0.0),),
+}
+
+
+def _convert_timeline(kind, frames):
+    """Rewrite one bone timeline in place into the Spine 4.2 wire format.
+
+    Three things differ from the 3.8-era shorthand the generators author in:
+
+    1. Rotation values live under "value", not "angle". A 4.x runtime that
+       finds "angle" reads every rotation as 0, so nothing turns.
+
+    2. A bezier is stored per ANIMATED PROPERTY, not per keyframe. `rotate`
+       drives one property and needs 4 numbers, but `translate`, `scale` and
+       `shear` drive two (x and y) and need 8. Given only 4, the runtime
+       indexes past the end of the array, reads undefined, and NaN spreads
+       through the bone transforms until the skeleton stops rasterizing
+       entirely -- it renders the setup pose for one frame, then vanishes.
+
+    3. Control points are absolute, in the same units as `time` and `value`,
+       not normalized to the segment. From Animation.js in spine-core:
+
+           let dx = (cx1 - time1) * 0.3 + ...;  let x = time1 + dx;
+
+       Normalized points land outside the segment they belong to, which makes
+       the interpolation lurch instead of ease.
+
+    A keyframe's curve also governs the segment that STARTS at it, so curves
+    shift one frame earlier: what the generators attach to frame i describes
+    the segment i-1 -> i.
+    """
+    properties = _TIMELINE_PROPERTIES.get(kind)
+    if not properties or len(frames) < 2:
+        return
+
+    if kind == "rotate":
+        for kf in frames:
+            if "angle" in kf:
+                kf["value"] = kf.pop("angle")
+
+    authored = [kf.pop("curve", None) for kf in frames]
+
+    for i in range(len(frames) - 1):
+        curve = authored[i + 1]
+        if curve is None:
+            continue
+        if curve == "stepped":
+            frames[i]["curve"] = "stepped"
+            continue
+        if not isinstance(curve, list) or len(curve) < 4:
+            continue
+
+        cx1, cy1, cx2, cy2 = curve[:4]
+        time1, time2 = frames[i]["time"], frames[i + 1]["time"]
+        span = time2 - time1
+
+        absolute = []
+        for name, default in properties:
+            value1 = frames[i].get(name, default)
+            value2 = frames[i + 1].get(name, default)
+            delta = value2 - value1
+            absolute += [
+                round(time1 + span * cx1, 6), round(value1 + delta * cy1, 6),
+                round(time1 + span * cx2, 6), round(value1 + delta * cy2, 6),
+            ]
+        frames[i]["curve"] = absolute
+
+
+def _to_spine_42(animations):
+    """Convert every bone timeline in `animations` to the Spine 4.2 format."""
+    for animation in animations.values():
+        for timelines in animation.get("bones", {}).values():
+            for kind, frames in timelines.items():
+                _convert_timeline(kind, frames)
 
 
 # ─── Animation Generators ───────────────────────────────────────────────────
@@ -434,6 +529,10 @@ def build_spine_json(config):
     # Merge custom animations
     for name, data in config.get("custom_animations", {}).items():
         spine["animations"][name] = data
+
+    # Presets and custom animations alike are authored in the shorthand above;
+    # the file declares "spine": "4.2.0", so emit what a 4.x runtime expects.
+    _to_spine_42(spine["animations"])
 
     return spine
 

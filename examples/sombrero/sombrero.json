@@ -12,119 +12,119 @@
     {
       "name": "root",
       "length": 410.0,
-      "x": 0,
-      "y": 0
+      "x": 0.0,
+      "y": 0.0
     },
     {
       "name": "hip",
       "length": 0.0,
-      "x": 0,
-      "y": 410,
+      "x": 13.2,
+      "y": 323.8,
       "parent": "root"
     },
     {
       "name": "torso",
       "length": 265.2,
-      "x": 0,
-      "y": 0,
+      "x": 0.0,
+      "y": 0.0,
       "parent": "hip"
     },
     {
       "name": "neck",
       "length": 45.3,
-      "x": 10,
-      "y": 265,
+      "x": -13.5,
+      "y": 328.6,
       "parent": "torso"
     },
     {
       "name": "head",
       "length": 175.1,
-      "x": 5,
-      "y": 45,
+      "x": 0.0,
+      "y": -28.2,
       "parent": "neck"
     },
     {
       "name": "hat",
       "length": 30,
-      "x": 5,
-      "y": 175,
+      "x": 17.4,
+      "y": 244.8,
       "parent": "head"
     },
     {
       "name": "left-shoulder",
       "length": 159.1,
-      "x": -120,
-      "y": 235,
+      "x": 110.8,
+      "y": 233.2,
       "parent": "torso"
     },
     {
       "name": "left-hand-bone",
       "length": 30,
-      "x": -110,
-      "y": -115,
+      "x": 0.0,
+      "y": -120.0,
       "parent": "left-shoulder"
     },
     {
       "name": "right-shoulder",
       "length": 129.8,
-      "x": 120,
-      "y": 230,
+      "x": -83.3,
+      "y": 213.0,
       "parent": "torso"
     },
     {
       "name": "right-arm-bone",
       "length": 30,
-      "x": 35,
-      "y": -125,
+      "x": -57.75,
+      "y": 0.0,
       "parent": "right-shoulder"
     },
     {
       "name": "left-upper-leg",
       "length": 130.1,
-      "x": -40,
-      "y": -20,
+      "x": 51.9,
+      "y": -13.6,
       "parent": "hip"
     },
     {
       "name": "left-lower-leg",
       "length": 170.3,
-      "x": 5,
-      "y": -130,
+      "x": 26.75,
+      "y": -132.85,
       "parent": "left-upper-leg"
     },
     {
       "name": "left-foot",
       "length": 30,
-      "x": -10,
-      "y": -170,
+      "x": 26.75,
+      "y": -142.6,
       "parent": "left-lower-leg"
     },
     {
       "name": "right-upper-leg",
       "length": 150.7,
-      "x": 40,
-      "y": -20,
+      "x": -51.9,
+      "y": 13.6,
       "parent": "hip"
     },
     {
       "name": "right-lower-leg",
       "length": 150.1,
-      "x": 15,
-      "y": -150,
+      "x": -24.85,
+      "y": -151.8,
       "parent": "right-upper-leg"
     },
     {
       "name": "right-foot",
       "length": 30,
-      "x": 5,
-      "y": -150,
+      "x": -24.85,
+      "y": -142.55,
       "parent": "right-lower-leg"
     }
   ],
   "slots": [
     {
       "name": "right-arm",
-      "bone": "right-arm-bone",
+      "bone": "left-shoulder",
       "attachment": "right-arm"
     },
     {
@@ -134,7 +134,7 @@
     },
     {
       "name": "right-leg",
-      "bone": "right-lower-leg",
+      "bone": "left-lower-leg",
       "attachment": "right-leg"
     },
     {
@@ -144,7 +144,7 @@
     },
     {
       "name": "left-leg",
-      "bone": "left-lower-leg",
+      "bone": "right-lower-leg",
       "attachment": "left-leg"
     },
     {
@@ -154,7 +154,7 @@
     },
     {
       "name": "left-hand",
-      "bone": "left-hand-bone",
+      "bone": "right-shoulder",
       "attachment": "left-hand"
     },
     {
@@ -179,102 +179,82 @@
       "attachments": {
         "right-arm": {
           "right-arm": {
-            "x": -31,
-            "y": -78,
+            "x": 0.0,
+            "y": -120.0,
             "width": 97,
-            "height": 240,
-            "scaleX": 0.321,
-            "scaleY": 0.321
+            "height": 240
           }
         },
         "right-thigh": {
           "right-thigh": {
-            "x": -78.7,
-            "y": -146.1,
+            "x": 0.0,
+            "y": -93.5,
             "width": 113,
-            "height": 187,
-            "scaleX": 0.321,
-            "scaleY": 0.321
+            "height": 187
           }
         },
         "right-leg": {
           "right-leg": {
-            "x": 63.6,
-            "y": -146,
+            "x": 26.75,
+            "y": -83.35,
             "width": 145,
-            "height": 237,
-            "scaleX": 0.321,
-            "scaleY": 0.321
+            "height": 237
           }
         },
         "left-thigh": {
           "left-thigh": {
-            "x": 105.1,
-            "y": -163.8,
+            "x": 0.0,
+            "y": -84.0,
             "width": 120,
-            "height": 168,
-            "scaleX": 0.321,
-            "scaleY": 0.321
+            "height": 168
           }
         },
         "left-leg": {
           "left-leg": {
-            "x": -53.4,
-            "y": -157.7,
+            "x": -24.85,
+            "y": -83.3,
             "width": 145,
-            "height": 237,
-            "scaleX": 0.321,
-            "scaleY": 0.321
+            "height": 237
           }
         },
         "waist": {
           "waist": {
-            "x": 19.5,
-            "y": -81,
+            "x": 6.3,
+            "y": 5.2,
             "width": 187,
-            "height": 159,
-            "scaleX": 0.321,
-            "scaleY": 0.321
+            "height": 159
           }
         },
         "torso": {
           "torso": {
-            "x": 25.5,
-            "y": 105,
+            "x": 12.3,
+            "y": 191.2,
             "width": 307,
-            "height": 352,
-            "scaleX": 0.321,
-            "scaleY": 0.321
+            "height": 352
           }
         },
         "left-hand": {
           "left-hand": {
-            "x": 44.4,
-            "y": 6.8,
+            "x": -115.5,
+            "y": 0.0,
             "width": 231,
-            "height": 86,
-            "scaleX": 0.321,
-            "scaleY": 0.321
+            "height": 86
           }
         },
         "head": {
           "head": {
-            "x": -15.3,
-            "y": 21.7,
+            "x": 0.0,
+            "y": 117.5,
             "width": 192,
-            "height": 235,
-            "scaleX": 0.321,
-            "scaleY": 0.321
+            "height": 235
           }
         },
         "hat": {
           "hat": {
-            "x": -2.9,
-            "y": 5.2,
+            "x": 0.0,
+            "y": 31.2,
             "width": 391,
-            "height": 208,
-            "scaleX": 0.321,
-            "scaleY": 0.321
+            "height": 208
           }
         }
       }
@@ -293,19 +273,17 @@
                 0.25,
                 0,
                 0.75,
-                1
+                0,
+                0.25,
+                0,
+                0.75,
+                3
               ]
             },
             {
               "time": 1.0,
               "x": 0,
-              "y": 3,
-              "curve": [
-                0.25,
-                0,
-                0.75,
-                1
-              ]
+              "y": 3
             },
             {
               "time": 2.0,
@@ -321,20 +299,14 @@
               "value": 0,
               "curve": [
                 0.25,
-                0,
+                0.0,
                 0.75,
-                1
+                0.8
               ]
             },
             {
               "time": 1.0,
-              "value": 0.8,
-              "curve": [
-                0.25,
-                0,
-                0.75,
-                1
-              ]
+              "value": 0.8
             },
             {
               "time": 2.0,
@@ -350,19 +322,17 @@
                 0.25,
                 0,
                 0.75,
-                1
+                0,
+                0.25,
+                0,
+                0.75,
+                3
               ]
             },
             {
               "time": 1.0,
               "x": 0,
-              "y": 3,
-              "curve": [
-                0.25,
-                0,
-                0.75,
-                1
-              ]
+              "y": 3
             },
             {
               "time": 2.0,
@@ -377,31 +347,25 @@
               "time": 0,
               "value": 0,
               "curve": [
-                0.25,
-                0,
-                0.75,
-                1
+                0.175,
+                0.0,
+                0.525,
+                -1.5
               ]
             },
             {
               "time": 0.7,
               "value": -1.5,
               "curve": [
-                0.25,
-                0,
-                0.75,
-                1
+                0.875,
+                -1.5,
+                1.225,
+                1.5
               ]
             },
             {
               "time": 1.4,
-              "value": 1.5,
-              "curve": [
-                0.25,
-                0,
-                0.75,
-                1
-              ]
+              "value": 1.5
             },
             {
               "time": 2.0,
@@ -417,19 +381,17 @@
                 0.25,
                 0,
                 0.75,
-                1
+                0,
+                0.25,
+                0,
+                0.75,
+                2
               ]
             },
             {
               "time": 1.0,
               "x": 0,
-              "y": 2,
-              "curve": [
-                0.25,
-                0,
-                0.75,
-                1
-              ]
+              "y": 2
             },
             {
               "time": 2.0,
@@ -445,20 +407,14 @@
               "value": 0,
               "curve": [
                 0.25,
-                0,
+                0.0,
                 0.75,
-                1
+                0.5
               ]
             },
             {
               "time": 1.0,
-              "value": 0.5,
-              "curve": [
-                0.25,
-                0,
-                0.75,
-                1
-              ]
+              "value": 0.5
             },
             {
               "time": 2.0,
@@ -472,31 +428,25 @@
               "time": 0,
               "value": 0,
               "curve": [
-                0.25,
-                0,
-                0.75,
-                1
+                0.175,
+                0.0,
+                0.525,
+                0.8
               ]
             },
             {
               "time": 0.7,
               "value": 0.8,
               "curve": [
-                0.25,
-                0,
-                0.75,
-                1
+                0.875,
+                0.8,
+                1.225,
+                -0.8
               ]
             },
             {
               "time": 1.4,
-              "value": -0.8,
-              "curve": [
-                0.25,
-                0,
-                0.75,
-                1
-              ]
+              "value": -0.8
             },
             {
               "time": 2.0,
@@ -510,31 +460,25 @@
               "time": 0,
               "value": 0,
               "curve": [
-                0.25,
-                0,
-                0.75,
-                1
+                0.2,
+                0.0,
+                0.6,
+                -1.5
               ]
             },
             {
               "time": 0.8,
               "value": -1.5,
               "curve": [
-                0.25,
-                0,
-                0.75,
-                1
+                1.0,
+                -1.5,
+                1.4,
+                1.5
               ]
             },
             {
               "time": 1.6,
-              "value": 1.5,
-              "curve": [
-                0.25,
-                0,
-                0.75,
-                1
-              ]
+              "value": 1.5
             },
             {
               "time": 2.0,
@@ -548,31 +492,25 @@
               "time": 0,
               "value": 0,
               "curve": [
-                0.25,
-                0,
-                0.75,
-                1
+                0.15,
+                0.0,
+                0.45,
+                2.0
               ]
             },
             {
               "time": 0.6,
               "value": 2.0,
               "curve": [
-                0.25,
-                0,
                 0.75,
-                1
+                2.0,
+                1.05,
+                -2.0
               ]
             },
             {
               "time": 1.2,
-              "value": -2.0,
-              "curve": [
-                0.25,
-                0,
-                0.75,
-                1
-              ]
+              "value": -2.0
             },
             {
               "time": 2.0,
@@ -587,20 +525,14 @@
               "value": 0,
               "curve": [
                 0.25,
-                0,
+                0.0,
                 0.75,
-                1
+                -0.8
               ]
             },
             {
               "time": 1.0,
-              "value": -0.8,
-              "curve": [
-                0.25,
-                0,
-                0.75,
-                1
-              ]
+              "value": -0.8
             },
             {
               "time": 2.0,
@@ -615,20 +547,14 @@
               "value": 0,
               "curve": [
                 0.25,
-                0,
+                0.0,
                 0.75,
-                1
+                0.6
               ]
             },
             {
               "time": 1.0,
-              "value": 0.6,
-              "curve": [
-                0.25,
-                0,
-                0.75,
-                1
-              ]
+              "value": 0.6
             },
             {
               "time": 2.0,
